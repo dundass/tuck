@@ -442,7 +442,7 @@ html, body, #wrapper, .main, .weather {
     background-repeat: no-repeat;
     background-position: center;
     background-color: white;
-    background-image: url("tuckshop/images/twinkl_preloader.gif");
+    background-image: url("../../tuckshop/images/twinkl_preloader.gif");
     opacity: 1;
     -webkit-transition: opacity 0.4s;
     -o-transition: opacity 0.4s;
@@ -468,7 +468,7 @@ html, body, #wrapper, .main, .weather {
       left: 0;
       right: 0; }
     .main.title .title-sky {
-      background-image: url("tuckshop/images/title/Sky.png");
+      background-image: url("../../tuckshop/images/title/Sky.png");
       bottom: -400%;
       height: 500%;
       -webkit-transition: bottom 4s;
@@ -481,7 +481,7 @@ html, body, #wrapper, .main, .weather {
            -o-transition-delay: 1s;
               transition-delay: 1s; }
     .main.title .title-bg {
-      background-image: url("tuckshop/images/title/BG.png");
+      background-image: url("../../tuckshop/images/title/BG.png");
       height: 100%;
       bottom: -100%;
       -webkit-transition: bottom 2s ease-out;
@@ -491,7 +491,7 @@ html, body, #wrapper, .main, .weather {
            -o-transition-delay: 3s;
               transition-delay: 3s; }
     .main.title .title-mountains {
-      background-image: url("tuckshop/images/title/Mountains.png");
+      background-image: url("../../tuckshop/images/title/Mountains.png");
       height: 100%;
       bottom: -100%;
       -webkit-transition: bottom 2s ease-out;
@@ -501,7 +501,7 @@ html, body, #wrapper, .main, .weather {
            -o-transition-delay: 3.05s;
               transition-delay: 3.05s; }
     .main.title .title-small-hill {
-      background-image: url("tuckshop/images/title/Small Hill.png");
+      background-image: url("../../tuckshop/images/title/Small Hill.png");
       height: 100%;
       bottom: -100%;
       -webkit-transition: bottom 2s ease-out;
@@ -511,7 +511,7 @@ html, body, #wrapper, .main, .weather {
            -o-transition-delay: 3.1s;
               transition-delay: 3.1s; }
     .main.title .title-grassplain {
-      background-image: url("tuckshop/images/title/Grassplain.png");
+      background-image: url("../../tuckshop/images/title/Grassplain.png");
       height: 100%;
       bottom: -100%;
       -webkit-transition: bottom 2s ease-out;
@@ -521,7 +521,7 @@ html, body, #wrapper, .main, .weather {
            -o-transition-delay: 3.15s;
               transition-delay: 3.15s; }
     .main.title .title-middleground {
-      background-image: url("tuckshop/images/title/Middleground.png");
+      background-image: url("../../tuckshop/images/title/Middleground.png");
       height: 100%;
       bottom: -100%;
       -webkit-transition: bottom 2s ease-out;
@@ -531,7 +531,7 @@ html, body, #wrapper, .main, .weather {
            -o-transition-delay: 3.2s;
               transition-delay: 3.2s; }
     .main.title .title-foreground {
-      background-image: url("tuckshop/images/title/Foreground.png");
+      background-image: url("../../tuckshop/images/title/Foreground.png");
       height: 100%;
       bottom: -100%;
       -webkit-transition: bottom 2s ease-out;
@@ -553,7 +553,7 @@ html, body, #wrapper, .main, .weather {
       -webkit-transition-delay: 6s;
            -o-transition-delay: 6s;
               transition-delay: 6s;
-      background-image: url("tuckshop/images/title/TuckShopTypography.png"); }
+      background-image: url("../../tuckshop/images/title/TuckShopTypography.png"); }
     .main.title .title-button-container {
       position: relative;
       top: 13%;
@@ -575,10 +575,10 @@ html, body, #wrapper, .main, .weather {
                 transition-delay: 7s; }
         .main.title .title-button-container .title-button.continue {
           right: 5%;
-          background-image: url("tuckshop/images/title/Continue.png"); }
+          background-image: url("../../tuckshop/images/title/Continue.png"); }
         .main.title .title-button-container .title-button.new-game {
           left: 5%;
-          background-image: url("tuckshop/images/title/NewGame.png"); }
+          background-image: url("../../tuckshop/images/title/NewGame.png"); }
     .main.title.transitioning {
       opacity: 1; }
       .main.title.transitioning .title-sky {
@@ -591,7 +591,7 @@ html, body, #wrapper, .main, .weather {
 .weather {
   z-index: 1; }
   .weather.rain {
-    background: url("tuckshop/images/good-rain.png");
+    background: url("../../tuckshop/images/good-rain.png");
     background-size: 100% 200%;
     -webkit-animation-name: precipitation;
             animation-name: precipitation;
@@ -602,7 +602,7 @@ html, body, #wrapper, .main, .weather {
     -webkit-animation-timing-function: linear;
             animation-timing-function: linear; }
   .weather.festival {
-    background: url("tuckshop/images/bunting.png") no-repeat center;
+    background: url("../../tuckshop/images/bunting.png") no-repeat center;
     background-size: cover;
     -webkit-animation: none;
             animation: none; }
@@ -692,7 +692,7 @@ html, body, #wrapper, .main, .weather {
   top: 50%;
   width: 10%;
   height: 25%;
-  background: url("tuckshop/images/shop/Tuck.png") no-repeat center;
+  background: url("../../tuckshop/images/shop/Tuck.png") no-repeat center;
   background-size: contain;
   z-index: 0; }
 
@@ -709,35 +709,35 @@ html, body, #wrapper, .main, .weather {
     left: 35%;
     width: 33%;
     height: 75%;
-    background-image: url("tuckshop/images/shop/Shop.png"); }
+    background-image: url("../../tuckshop/images/shop/Shop.png"); }
   .tucks-shop .shop-potions {
     position: absolute;
     top: 5%;
     left: 53%;
     width: 30%;
     height: 90%;
-    background-image: url("tuckshop/images/shop/Potion Rack.png"); }
+    background-image: url("../../tuckshop/images/shop/Potion Rack.png"); }
   .tucks-shop .shop-wardrobe {
     position: absolute;
     top: 5%;
     left: 13%;
     width: 30%;
     height: 95%;
-    background-image: url("tuckshop/images/shop/Full Wardrobe.png"); }
+    background-image: url("../../tuckshop/images/shop/Full Wardrobe.png"); }
   .tucks-shop .shop-tacklebox {
     position: absolute;
     bottom: -5%;
     left: 30%;
     width: 19%;
     height: 50%;
-    background-image: url("tuckshop/images/shop/Tackle Box.png"); }
+    background-image: url("../../tuckshop/images/shop/Tackle Box.png"); }
   .tucks-shop .shop-stationery {
     position: absolute;
     top: 38%;
     left: 43%;
     width: 16%;
     height: 35%;
-    background-image: url("tuckshop/images/shop/Writing Supplies.png"); }
+    background-image: url("../../tuckshop/images/shop/Writing Supplies.png"); }
 
 .denizen {
   position: absolute;
@@ -809,7 +809,7 @@ html, body, #wrapper, .main, .weather {
   color: #621e0f; }
 
 .title-frame {
-  background-image: url("tuckshop/images/ui/TitleFrame.png");
+  background-image: url("../../tuckshop/images/ui/TitleFrame.png");
   color: white;
   text-align: center;
   padding: 0.75%; }
@@ -822,7 +822,7 @@ html, body, #wrapper, .main, .weather {
   padding: 1%;
   padding-top: 0;
   height: 19%;
-  background: url("tuckshop/images/ui/BG_SD.png") no-repeat center;
+  background: url("../../tuckshop/images/ui/BG_SD.png") no-repeat center;
   background-size: contain; }
 
 .day-sundial {
@@ -831,7 +831,7 @@ html, body, #wrapper, .main, .weather {
   top: 9.75%;
   width: 70%;
   height: 80%;
-  background: url("tuckshop/images/ui/Dial.png") no-repeat center;
+  background: url("../../tuckshop/images/ui/Dial.png") no-repeat center;
   background-size: contain; }
 
 .day-sundial-front {
@@ -840,7 +840,7 @@ html, body, #wrapper, .main, .weather {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("tuckshop/images/ui/Top_SD.png") no-repeat center;
+  background: url("../../tuckshop/images/ui/Top_SD.png") no-repeat center;
   background-size: contain;
   -webkit-transform-origin: bottom center;
       -ms-transform-origin: bottom center;
@@ -862,7 +862,7 @@ html, body, #wrapper, .main, .weather {
   right: 12%;
   width: 3%;
   padding-top: 3%;
-  background: url("tuckshop/images/ui/Inventory Button.png") no-repeat center;
+  background: url("../../tuckshop/images/ui/Inventory Button.png") no-repeat center;
   background-size: contain;
   z-index: 4; }
 
@@ -872,7 +872,7 @@ html, body, #wrapper, .main, .weather {
   right: 9.5%;
   width: 3%;
   padding-top: 3%;
-  background: url("tuckshop/images/ui/Map Button.png") no-repeat center;
+  background: url("../../tuckshop/images/ui/Map Button.png") no-repeat center;
   background-size: contain;
   z-index: 4; }
 
@@ -882,7 +882,7 @@ html, body, #wrapper, .main, .weather {
   right: 5.75%;
   width: 3%;
   padding-top: 3%;
-  background: url("tuckshop/images/ui/CloseShop.png") no-repeat center;
+  background: url("../../tuckshop/images/ui/CloseShop.png") no-repeat center;
   background-size: contain;
   z-index: 4; }
 
@@ -899,7 +899,7 @@ html, body, #wrapper, .main, .weather {
     left: 40%;
     width: 20%;
     height: 60%;
-    background: url("tuckshop/images/ui/Repbarback.png") no-repeat center;
+    background: url("../../tuckshop/images/ui/Repbarback.png") no-repeat center;
     background-size: 100%; }
     .player-stats .rep-icon .rep-stars {
       position: absolute;
@@ -916,7 +916,7 @@ html, body, #wrapper, .main, .weather {
       left: 0;
       width: 100%;
       height: 100%;
-      background: url("tuckshop/images/ui/Rep_BarFront.png") no-repeat center;
+      background: url("../../tuckshop/images/ui/Rep_BarFront.png") no-repeat center;
       background-size: contain; }
   .player-stats .cash-icon {
     position: absolute;
@@ -925,7 +925,7 @@ html, body, #wrapper, .main, .weather {
     left: 13%;
     width: 20%;
     height: 60%;
-    background: url("tuckshop/images/ui/Currency.png") no-repeat center;
+    background: url("../../tuckshop/images/ui/Currency.png") no-repeat center;
     background-size: 100%; }
   .player-stats .cash-amount {
     text-align: center;
@@ -946,7 +946,7 @@ html, body, #wrapper, .main, .weather {
       padding-bottom: 24%;
       margin-right: 2%;
       height: 0;
-      background-image: url("tuckshop/images/ui/PerkIcon.png"); }
+      background-image: url("../../tuckshop/images/ui/PerkIcon.png"); }
       .player-stats .perks .perk .perk-icon {
         display: inline-block;
         position: absolute;
@@ -966,7 +966,7 @@ html, body, #wrapper, .main, .weather {
   font-size: 3.9vm;
   font-size: 3.9vmin;
   color: #36140c;
-  background: url("tuckshop/images/ui/BG_SI.png") no-repeat center;
+  background: url("../../tuckshop/images/ui/BG_SI.png") no-repeat center;
   background-size: contain; }
   .question .question-title {
     position: absolute;
@@ -974,7 +974,7 @@ html, body, #wrapper, .main, .weather {
     top: 10%;
     width: 34%;
     min-height: 20%;
-    background: url("tuckshop/images/ui/TitleFrame.png") no-repeat center;
+    background: url("../../tuckshop/images/ui/TitleFrame.png") no-repeat center;
     background-size: contain;
     color: white;
     padding: 1.5%;
@@ -999,14 +999,14 @@ html, body, #wrapper, .main, .weather {
               filter: grayscale(0.5); }
     .question .answer.yes {
       right: 0;
-      background-image: url("tuckshop/images/ui/GreenIcon.png"); }
+      background-image: url("../../tuckshop/images/ui/GreenIcon.png"); }
       .question .answer.yes:active, .question .answer.yes.answered {
-        background-image: url("tuckshop/images/ui/Yes.png"); }
+        background-image: url("../../tuckshop/images/ui/Yes.png"); }
     .question .answer.no {
       left: 0;
-      background-image: url("tuckshop/images/ui/RedIcon.png"); }
+      background-image: url("../../tuckshop/images/ui/RedIcon.png"); }
       .question .answer.no:active, .question .answer.no.answered {
-        background-image: url("tuckshop/images/ui/No.png"); }
+        background-image: url("../../tuckshop/images/ui/No.png"); }
     .question .answer.no.answered, .question .answer.yes.answered {
       -webkit-transform: scale(1);
           -ms-transform: scale(1);
@@ -1126,7 +1126,7 @@ html, body, #wrapper, .main, .weather {
   left: 15%;
   width: 70%;
   height: 55%;
-  background-image: url("tuckshop/images/ui/Item_View_BG.png"); }
+  background-image: url("../../tuckshop/images/ui/Item_View_BG.png"); }
   .map .map-title {
     position: absolute;
     top: -5%;
@@ -1139,13 +1139,13 @@ html, body, #wrapper, .main, .weather {
     padding-top: 30%;
     top: 15%; }
     .map .map-location.roadside {
-      background-image: url("tuckshop/images/environment/For.png");
+      background-image: url("../../tuckshop/images/environment/For.png");
       left: 0; }
     .map .map-location.village {
-      background-image: url("tuckshop/images/environment/Vill.png");
+      background-image: url("../../tuckshop/images/environment/Vill.png");
       left: 33%; }
     .map .map-location.city-walls {
-      background-image: url("tuckshop/images/environment/CW.png");
+      background-image: url("../../tuckshop/images/environment/CW.png");
       left: 66%; }
 
 .inventory {
@@ -1162,7 +1162,7 @@ html, body, #wrapper, .main, .weather {
   -webkit-transition: right 1s;
   -o-transition: right 1s;
   transition: right 1s;
-  background: url("tuckshop/images/ui/Scroll.png") no-repeat center;
+  background: url("../../tuckshop/images/ui/Scroll.png") no-repeat center;
   background-size: 112% 134%; }
 
 .inventory-slide-enter-active, .inventory-slide-leave-active {
@@ -1184,7 +1184,7 @@ html, body, #wrapper, .main, .weather {
   font-size: 1.6rem;
   font-size: 4.5vm;
   font-size: 4.5vmin;
-  background: url("tuckshop/images/ui/BG_EOD.png") no-repeat center;
+  background: url("../../tuckshop/images/ui/BG_EOD.png") no-repeat center;
   background-size: contain;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1196,7 +1196,7 @@ html, body, #wrapper, .main, .weather {
   -ms-flex-pack: distribute;
       justify-content: space-around; }
   .day-review.item-view {
-    background-image: url("tuckshop/images/ui/+ItemBG.png");
+    background-image: url("../../tuckshop/images/ui/+ItemBG.png");
     height: 83%;
     padding-top: 5.5%;
     top: 6%; }
@@ -1208,7 +1208,7 @@ html, body, #wrapper, .main, .weather {
     .day-review .day-review-inner .day-review-item-category {
       width: 82%;
       height: 10%;
-      background: url("tuckshop/images/ui/Bar_EOD.png") no-repeat center;
+      background: url("../../tuckshop/images/ui/Bar_EOD.png") no-repeat center;
       background-size: contain;
       margin: 2% auto;
       padding: 2% 4%;
@@ -1217,7 +1217,7 @@ html, body, #wrapper, .main, .weather {
       opacity: 1;
       cursor: pointer; }
       .day-review .day-review-inner .day-review-item-category.expanded {
-        background-image: url("tuckshop/images/ui/Item_Bar.png");
+        background-image: url("../../tuckshop/images/ui/Item_Bar.png");
         padding: 7% 6%;
         width: 92%; }
       .day-review .day-review-inner .day-review-item-category .day-review-item-right {
@@ -1230,7 +1230,7 @@ html, body, #wrapper, .main, .weather {
           width: 65%;
           height: 100%;
           min-height: 100%;
-          background: url("tuckshop/images/ui/Coin.png") no-repeat center;
+          background: url("../../tuckshop/images/ui/Coin.png") no-repeat center;
           background-size: contain; }
       .day-review .day-review-inner .day-review-item-category .day-review-plus {
         position: absolute;
@@ -1248,7 +1248,7 @@ html, body, #wrapper, .main, .weather {
       .day-review .day-review-inner .day-review-coin-holder .day-review-coin-bottom {
         margin-right: -5%;
         padding: 4%;
-        background: url("tuckshop/images/ui/Coin.png") no-repeat center;
+        background: url("../../tuckshop/images/ui/Coin.png") no-repeat center;
         background-size: contain; }
     .day-review .day-review-inner .day-review-profit {
       position: relative;
@@ -1270,7 +1270,7 @@ html, body, #wrapper, .main, .weather {
     top: 0;
     width: 8%;
     padding-top: 8%;
-    background: url("tuckshop/images/ui/Exit_Bu.png") no-repeat center;
+    background: url("../../tuckshop/images/ui/Exit_Bu.png") no-repeat center;
     background-size: contain; }
   .day-review .next-day {
     position: absolute;
@@ -1315,7 +1315,7 @@ html, body, #wrapper, .main, .weather {
   margin: 0 auto;
   top: -5.5%;
   width: 54%;
-  background: url("tuckshop/images/ui/TitleFrame.png") no-repeat center;
+  background: url("../../tuckshop/images/ui/TitleFrame.png") no-repeat center;
   background-size: contain;
   color: white;
   padding: 2%;
@@ -1327,7 +1327,7 @@ html, body, #wrapper, .main, .weather {
   left: 3%;
   width: 33%;
   height: 67%;
-  background: url("tuckshop/images/ui/Warehouse_BG.png") no-repeat center;
+  background: url("../../tuckshop/images/ui/Warehouse_BG.png") no-repeat center;
   background-size: contain;
   font-size: 4vm;
   font-size: 4vmin; }
@@ -1367,7 +1367,7 @@ html, body, #wrapper, .main, .weather {
   left: 38%;
   width: 24%;
   height: 50%;
-  background: url("tuckshop/images/ui/Item_View_BG.png") no-repeat center;
+  background: url("../../tuckshop/images/ui/Item_View_BG.png") no-repeat center;
   background-size: contain;
   text-align: center;
   pointer-events: all;
@@ -1394,10 +1394,10 @@ html, body, #wrapper, .main, .weather {
     margin-top: 5%; }
   .restock-change-amount .minus {
     left: 6%;
-    background-image: url("tuckshop/images/ui/Item_View_Minus.png"); }
+    background-image: url("../../tuckshop/images/ui/Item_View_Minus.png"); }
   .restock-change-amount .plus {
     right: 6%;
-    background-image: url("tuckshop/images/ui/Item_View_Plus.png"); }
+    background-image: url("../../tuckshop/images/ui/Item_View_Plus.png"); }
 
 .restock-item-view {
   position: absolute;
@@ -1420,7 +1420,7 @@ html, body, #wrapper, .main, .weather {
     height: 45%;
     margin: 0 auto;
     margin-bottom: 2%;
-    background-image: url("tuckshop/images/ui/Bar_EOD.png");
+    background-image: url("../../tuckshop/images/ui/Bar_EOD.png");
     background-size: 100% 100% !important; }
     .restock-expand-item-prices .restock-expand-item-price .day-review-item-right {
       width: 40%;
@@ -1441,9 +1441,9 @@ html, body, #wrapper, .main, .weather {
   font-size: 2.5vw;
   padding: 4%; }
   .restock-expand-item-purchase.buy {
-    background-image: url("tuckshop/images/ui/Buy_Button.png"); }
+    background-image: url("../../tuckshop/images/ui/Buy_Button.png"); }
   .restock-expand-item-purchase.sell {
-    background-image: url("tuckshop/images/ui/Sell_Button.png"); }
+    background-image: url("../../tuckshop/images/ui/Sell_Button.png"); }
 
 .restock-yours {
   position: absolute;
@@ -1451,7 +1451,7 @@ html, body, #wrapper, .main, .weather {
   top: 15%;
   width: 33%;
   height: 67%;
-  background: url("tuckshop/images/ui/YourStock_BG.png") no-repeat center;
+  background: url("../../tuckshop/images/ui/YourStock_BG.png") no-repeat center;
   background-size: contain;
   font-size: 4vm;
   font-size: 4vmin;
@@ -1478,7 +1478,7 @@ html, body, #wrapper, .main, .weather {
     top: -2%;
     width: 10%;
     padding-top: 10%;
-    background: url("tuckshop/images/ui/Exit_Bu.png") no-repeat center;
+    background: url("../../tuckshop/images/ui/Exit_Bu.png") no-repeat center;
     background-size: contain; }
 
 .restock-items {
@@ -1515,23 +1515,23 @@ html, body, #wrapper, .main, .weather {
   pointer-events: none; }
 
 .bronze {
-  background-image: url("tuckshop/images/ui/Bronze.png"); }
+  background-image: url("../../tuckshop/images/ui/Bronze.png"); }
 
 .silver {
-  background-image: url("tuckshop/images/ui/Silver.png"); }
+  background-image: url("../../tuckshop/images/ui/Silver.png"); }
 
 .gold {
-  background-image: url("tuckshop/images/ui/Gold.png"); }
+  background-image: url("../../tuckshop/images/ui/Gold.png"); }
 
 .unique {
-  background-image: url("/tuckshop/images/ui/Unique.png"); }
+  background-image: url("../../tuckshop/images/ui/Unique.png"); }
 
 .restock-item-amount {
   position: relative;
   top: 80%;
   margin-left: 158%;
   padding: 20%;
-  background: url("tuckshop/images/ui/PerkIcon.png") no-repeat center;
+  background: url("../../tuckshop/images/ui/PerkIcon.png") no-repeat center;
   background-size: contain;
   color: white;
   font-size: 1vw; }
@@ -1604,7 +1604,7 @@ html, body, #wrapper, .main, .weather {
     width: 23%;
     height: 50%;
     margin-top: 15%;
-    background-image: url("tuckshop/images/ui/PerksBG.png");
+    background-image: url("../../tuckshop/images/ui/PerksBG.png");
     text-align: center; }
     .perk-overlay .perk-choice > {
       position: relative;
@@ -1633,13 +1633,13 @@ html, body, #wrapper, .main, .weather {
   padding: 1%; }
 
 .glitz-coin {
-  background-image: url("tuckshop/images/ui/Coin.png"); }
+  background-image: url("../../tuckshop/images/ui/Coin.png"); }
   .glitz-coin.glitz-target {
     top: 3% !important;
     left: 3% !important; }
 
 .glitz-star {
-  background-image: url("tuckshop/images/ui/Star.png"); }
+  background-image: url("../../tuckshop/images/ui/Star.png"); }
   .glitz-star.glitz-target {
     top: 3% !important;
     left: 20% !important; }
@@ -1660,11 +1660,11 @@ html, body, #wrapper, .main, .weather {
     opacity: 0; }
 
 .glitz-coin-down {
-  background-image: url("tuckshop/images/ui/Coin.png");
+  background-image: url("../../tuckshop/images/ui/Coin.png");
   left: 5%; }
 
 .glitz-star-down {
-  background-image: url("tuckshop/images/ui/Star.png");
+  background-image: url("../../tuckshop/images/ui/Star.png");
   left: 20%; }
 
 .thought-bubble {
