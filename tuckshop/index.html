@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tuck Shop Empire v0.1.9</title>
+    <link rel="stylesheet" href="fonts/fonts.css">
+    <link rel="stylesheet" href="css/tuck.css">
+
+    <!--<script src="/js/vendor/vue.min.js"></script>-->
+    <!--<script src="/js/utils.js"></script>-->
+    <!--<script src="/js/vendor/howler.min.js"></script>-->
+    <script src="js/vue.min.js"></script>
+    <script src="js/howler.min.js"></script>
+    <script src="js/utils.js"></script>
+
+    <script src="js/tuck-data.js"></script>
+    <script src="js/tuck.js"></script>
+    <script>
+
+        // archive desc: Join Tuck on a journey through a rich, fantasy world filled with a huge cast of diverse and comedic characters. Learn to build a successful business, as you grow from almost nothing, to an empire of shops across the whole land! Every choice you make will have repercussions, both small scale and global, and a huge talent-tree of varied perks means no two playthroughs will ever be the same.
+        // archive prev: TitlePreview.png in images folder.
+
+        // TODO - animated title screen - falling leaves from roadside level but slight diagonal = less sway
+        // assets - U:\#All Age\#Assets For Animation\Tuck Shop Empire\For_Animated_Title\Title_Seperates
+
+        function init() {
+            tuck = new Vue({
+                el: '#wrapper',
+                data: Object.assign({}, TwinklGame.tuck.data, {
+                    stage: 'title',
+                    titleTransitioning: false,
+                    leaves: ['leaf-generic', 'leaf-oak', 'leaf-sycamore'].reduce(function (a, x, i, arr) { return a.concat(arr.concat(arr)) }, []),
+                    scrollFrame: 0
+                }),
+                methods: Object.assign({}, TwinklGame.tuck.methods, {
+                    newGame: function () {
+                        this.stage = 'main';
+                        this.loadArea('roadside');
+                        this.denizenLoop();
+                    },
+                    loadInitialGame: function () {
+                        this.stage = 'main';
+                        this.loadGame();
+                        this.loadArea(this.player.location);
+                        this.denizenLoop();
+                    },
+                    capitalise: TwinklGame.Utils.capitalise,
+                    animateScroll: function (direction) {
+                        var scope = this,
+                            scroll = document.getElementsByClassName('question')[0];
+
+                        var nextFrame = function () {
+
+                            if(direction === 'forwards') {
+                                if(scope.scrollFrame < 19) {
+                                    scope.scrollFrame++;
+                                    setTimeout(nextFrame, 10);
+                                }
+                            } else {
+                                if(scope.scrollFrame > 0) {
+                                    scope.scrollFrame--;
+                                    setTimeout(nextFrame, 10);
+                                }
+                            }
+
+                            scroll.style.backgroundPositionY = (scope.scrollFrame * 5.26) + '%';
+
+                        };
+
+                        setTimeout(nextFrame, 15);
+                    },
+                    openScroll: function () {
+                        this.animateScroll('forwards');
+                    },
+                    closeScroll: function () {
+                        this.animateScroll('backwards')
+                    },
+                    // do_a_jquery: function () {
+                    //     // << url validation logic here // diff between live / dev environments >>
+                    //     $.post('https://local.twinkl.it/ajax/resource/track', {
+                    //
+                    //     }, function (data, xhr) {
+                    //         console.log('game saved !')
+                    //         console.log('also theres this bunch of stuff:')
+                    //         console.log(data)
+                    //         console.log(xhr)
+                    //         // will be HTTP code -> more detailed than 'success' -> can handle each status code individually
+                    //
+                    //         // 3 typical form actions -> track (single events), state (overall info object), config (custom settings for resource)
+                    //
+                    //         // utils fn to handle this -> each of the above is an alias to the same function
+                    //
+                    //         // req: resourceId, type of event,
+                    //     }, 'json');
+                    // }
+                }),
+                computed: TwinklGame.tuck.computed,
+                mounted: function () {
+
+                    var click = new Howl({src: ['audio/click.mp3']});
+                    document.querySelectorAll('.clickable').forEach(function (btn) {
+                        btn.addEventListener('click', function() { click.play() });
+                    });
+
+                    Vue.nextTick(function () {
+
+                        document.querySelector('.preloader').classList.add('loaded');
+                        setTimeout(function () {
+                            this.titleTransitioning = true;
+                        }.bind(this), 5);
+
+                    }.bind(this));
+
+                    // this.loadGame();
+                },
+                updated: function() {
+                    // this.saveGame();
+                }
+            });
+        }
+
+    </script>
+</head>
+<body onload="init()">
+
+<div class="main preloader backgrounded"></div>
+
+<div id="wrapper">
+
+    <!--<span v-for="animation in animationData" v-bind:style="{ background: 'url(' + animation.url + ') no-repeat -9999px -9999px', backgroundSize: '100px 100px'  }"></span>-->
+
+    <div class="main title" v-show="stage === 'title'" :class="{ 'transitioning': titleTransitioning }">
+        <div class="title-sky locked backgrounded cover"></div>
+        <div class="title-bg locked backgrounded cover"></div>
+        <div class="title-mountains locked backgrounded cover"></div>
+        <div class="title-small-hill locked backgrounded cover"></div>
+        <div class="title-grassplain locked backgrounded cover"></div>
+        <div class="title-middleground locked backgrounded cover"></div>
+        <div class="title-foreground locked backgrounded cover"></div>
+        <div class="title-logo backgrounded"></div>
+        <div class="title-button-container">
+            <div class="title-button new-game backgrounded clickable bouncy" v-on:click="newGame"></div>
+            <div class="title-button continue backgrounded clickable bouncy" v-on:click="loadInitialGame"></div>
+        </div>
+    </div>
+
+    <div class="main" v-show="stage === 'main'">
+
+        <div class="main" id="worldFrame">
+            <div class="main" v-show="stage === 'main'" id="backgroundDay" v-bind:style="{ backgroundImage: 'url(' + getAreaCached.backgroundImage + ')' }"></div>
+
+            <div class="main" v-show="stage === 'main'" id="backgroundNight" v-bind:style="{ backgroundImage: 'url(' + getAreaCached.backgroundImageDark + ')', opacity: worldState.time > 60 ? ((worldState.time - 60) / 60).toFixed(2) : 0 }"></div>
+
+            <div class="main" v-show="stage === 'main'" id="characterFrame">
+                <div class="tucks-shop">
+                    <div class="shop-wardrobe backgrounded" v-show="player.stats.upgrades.includes('Wardrobe')"></div>
+                    <div class="shop-potions backgrounded" v-show="player.stats.upgrades.includes('Potion Rack')"></div>
+                    <div class="shop-base backgrounded"></div>
+                    <div class="shop-tacklebox backgrounded" v-show="player.stats.upgrades.includes('Tackle Box')"></div>
+                    <div class="shop-stationery backgrounded" v-show="player.stats.upgrades.includes('Stationery Storage')"></div>
+                </div>
+                <div class="tuck"></div>
+            </div>
+
+            <div class="weather"></div>
+
+            <div class="main" v-show="player.location === 'roadside'">
+                <span v-for="(leaf, idx) in leaves" class="falling-leaf backgrounded" v-bind:style="{ backgroundImage: 'url(images/' + leaf + '.png)', left: ((idx * idx) % 100) + '%', animationDelay: idx + 's' }"></span>
+            </div>
+
+            <!--<div class="main" v-show="player.location === 'village'">-->
+            <!--<span class="luma" style="top:21%;left:15.5%"></span>-->
+            <!--</div>-->
+        </div>
+
+        <div class="ui player-stats">
+            <span class="rep-icon" v-on:click="">
+                <!--<span class="rep-stars" v-bind:style="{ maskPosition: player.stats.reputation[player.location] + '%' }"></span>-->
+                <span class="rep-stars" v-bind:style="{ width: player.stats.reputation[player.location] * 0.8 + '%' }"></span>
+                <span class="rep-stars-overlay"></span>
+            </span>
+            <span class="cash-icon"></span>
+            <span class="cash-amount">{{ player.stats.currency }}</span>
+
+            <div class="perks">
+                <div v-for="perk in player.stats.perks" class="perk backgrounded">
+                    <div class="perk-icon backgrounded" v-bind:style="{ backgroundImage: 'url(' + getPerk(perk).image + ')' }"></div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="ui day-count" v-show="!uiState.restocking">
+            <span class="day-sundial" v-bind:style="{ transform: 'rotate(' + (worldState.time < 120 ? (worldState.time * 1.5).toFixed(1) : 180) + 'deg)' }"></span>
+            <div class="day-sundial-front"></div>
+            <div class="day-count-nums">Day: {{ worldState.day }}</div>
+        </div>
+
+        <div v-show="!uiState.restocking" v-on:click="uiState.inventoring = !uiState.inventoring" class="inventory-icon clickable"></div>
+        <div v-show="!uiState.restocking" v-bind:class="{ greyed: !worldState.endOfDay }" v-on:click="uiState.mapping = !uiState.mapping" class="map-icon clickable"></div>
+        <div v-show="!uiState.restocking && worldState.day > 1" v-bind:class="{ greyed: worldState.endOfDay }" v-on:click="closeShop" class="close-shop-icon clickable"></div>
+
+        <transition name="question-popup">
+            <div class="ui question bouncy flex-vert-center" v-on:click="answerQuestion" v-show="worldState.customer !== null" v-bind:style="{ fontSize: worldState.customerText.length < 84 ? '3.8vmin' : '2.6vmin' }">
+                <div class="question-title flex-vert-center">{{ worldState.customer }}</div>
+                <div>{{ worldState.customerText }}</div>
+                <div class="ui answer yes backgrounded clickable" v-show="(worldState.questionAnswered === '' || worldState.questionAnswered === 'yes')" v-bind:class="{ answered: worldState.questionAnswered === 'yes', disabled: !yesCheck }"></div>
+                <div class="ui answer no backgrounded clickable"  v-show="(worldState.questionAnswered === '' || worldState.questionAnswered === 'no')" v-bind:class="{ answered: worldState.questionAnswered === 'no' }"></div>
+            </div>
+        </transition>
+
+        <div v-show="uiState.choosingPerks && worldState.customer === null" class="ui perk-overlay">
+            <span v-for="perk in getPerksInAreaCached" v-on:click="choosePerk(perk.name)" class="perk-choice backgrounded clickable">
+                <span class="perk-title">{{ perk.name }}</span>
+                <br>
+                <span class="perk-desc">{{ perk.desc }}</span>
+            </span>
+        </div>
+
+        <div v-show="worldState.endOfDay && !uiState.restocking && !uiState.choosingPerks && !uiState.mapping" class="ui day-review" v-bind:class="{ 'item-view': uiState.endOfDayCategory.length > 0 }">
+            <!-- end of day landing -->
+            <div v-show="uiState.endOfDayCategory.length === 0" class="day-review-inner">
+                <!--<br>-->
+                <!--<span>People hired: {{ player.stats.today.hired }}</span>-->
+                <!--<span>&nbsp;</span>-->
+                <transition name="item-flow">
+
+                </transition>
+                <div v-for="(categoryItems, categoryName) in getSoldTodayCategorised" v-on:click="showItemCategory(categoryItems, categoryName)" class="day-review-item-category">
+                    <span>{{capitalise(categoryName)}}</span>
+                    <span class="day-review-item-right">
+                        {{categoryItems.reduce(function(acc, item) { return acc + item.value }, 0)}}
+                        <span class="day-review-coin"></span>
+                    </span>
+                    <span class="day-review-plus clickable">+</span>
+                </div>
+                <div class="day-review-item-category">
+                    <span>Outgoings</span>
+                    <span class="day-review-item-right">
+                        {{player.stats.today.outgoings}}
+                        <span class="day-review-coin"></span>
+                    </span>
+                </div>
+                <span>Reputation gained: {{ player.stats.today.reputation }}</span>
+                <div v-show="uiState.endOfDayCategory.length === 0" class="day-review-coin-holder">
+                    <span v-for="n in Math.max(1, ((player.stats.today.currency / 100)|0))" v-bind:style="{ left: (-10 + (n * 3)) + '%' }" class="day-review-coin-bottom"></span>
+                </div>
+                <span v-show="uiState.endOfDayCategory.length === 0" class="day-review-profit">{{ ((player.stats.today.currency + player.stats.today.outgoings) > 0 ? '+' : '') + (player.stats.today.currency + player.stats.today.outgoings) }}</span>
+            </div>
+            <!--<div class="day-review-bottom">-->
+            <!--</div>-->
+
+            <!-- end of day expanded -->
+            <div v-show="uiState.endOfDayCategory.length > 0" class="day-review-item-category-name">{{ capitalise(uiState.endOfDayCategory) }}</div>
+            <div v-show="uiState.endOfDayCategory.length > 0" class="day-review-inner">
+                <div v-for="item in uiState.endOfDayCategoryItems" class="day-review-item-category expanded">
+                    <span>{{capitalise(item.name) + ' x' + item.amount}}</span>
+                    <span class="day-review-item-right">
+                    {{item.value}}
+                    <span class="day-review-coin"></span>
+                </span>
+                </div>
+                <span>{{ (player.stats.today.currency > 0 ? '+' : '') + uiState.endOfDayCategoryItems.reduce(function(acc, item) { return acc + item.value }, 0)}}</span>
+            </div>
+            <span v-show="uiState.endOfDayCategory !== ''" v-on:click="uiState.endOfDayCategory = ''" class="day-review-close-category clickable"></span>
+
+            <span v-on:click="toRestock" class="restock-button"><b>Restock</b></span>
+            <span v-on:click="newDay()" class="next-day"><b>Next day!</b></span>
+        </div>
+
+        <!-- end of day restock -->
+        <!--<transition name="restock-slide">-->
+        <div v-show="worldState.endOfDay && uiState.restocking" v-on:click="selectRestockItem" class="ui restock-warehouse">
+            <div class="restock-heading">Warehouse</div>
+            <div class="restock-switcher">
+                <span v-bind:class="{ selected: !uiState.restockUpgrades }" v-on:click="uiState.restockUpgrades = false; uiState.restockItem = ''" class="restock-switch items">Items</span>
+                <span v-bind:class="{ selected: uiState.restockUpgrades }" v-on:click="uiState.restockUpgrades = true; uiState.restockItem = ''" class="restock-switch upgrades">Upgrades</span>
+            </div>
+            <div class="restock-items warehouse">
+                <span v-show="!uiState.restockUpgrades" class="restock-item backgrounded clickable bronze" v-for="item in getItemsInAreaCached" v-bind:class="{ selected: uiState.restockItem === item.name && uiState.restockWarehouse, greyed: !itemIsUnlocked(item.name) }" v-bind:data-item="item.name" v-bind:data-stock="'warehouse'">
+                    <span class="item-icon backgrounded" v-bind:style="{ backgroundImage: 'url(' + item.image + ')' }"></span>&nbsp;
+                </span>
+                <span v-show="uiState.restockUpgrades" class="restock-item backgrounded clickable bronze" v-for="item in getUpgradesCached" v-bind:class="{ selected: uiState.restockItem === item.name && uiState.restockWarehouse }" v-bind:data-item="item.name" v-bind:data-stock="'warehouse'">
+                    <span class="item-icon backgrounded" v-bind:style="{ backgroundImage: 'url(' + item.image + ')' }"></span>&nbsp;
+                </span>
+            </div>
+        </div>
+        <!--</transition>-->
+
+        <div v-if="worldState.endOfDay && uiState.restocking && uiState.restockItem.length > 0" class="ui restock-expand-item">
+            <div class="restock-expand-item-heading">
+                <p>{{uiState.restockItem}}</p>
+                <div style="font-size: 1.5vw">{{uiState.restockItem.length > 0 && !uiState.restockUpgrades ? capitalise(getItem(uiState.restockItem).type) + ' item' : 'Shop upgrade'}}</div>
+            </div>
+            <div class="restock-change-amount backgrounded">
+                <span v-show="!uiState.restockUpgrades && uiState.restockAmount > 1" class="change-value minus backgrounded clickable" v-on:click="uiState.restockAmount > 0 ? uiState.restockAmount-- : ''"></span>
+                <span v-show="!uiState.restockUpgrades" class="restock-item-view backgrounded bronze"><span class="item-icon backgrounded" v-bind:style="{ backgroundImage: 'url(' + (uiState.restockItem.length > 0 && !uiState.restockUpgrades ? getItem(uiState.restockItem).image : '') + ')' }"></span><span class="restock-item-amount main">{{ uiState.restockAmount }}</span></span>
+                <span v-show="uiState.restockUpgrades" class="restock-item-view backgrounded bronze"><span class="item-icon backgrounded" v-bind:style="{ backgroundImage: 'url(' + (uiState.restockItem.length > 0 && uiState.restockUpgrades ? getUpgrade(uiState.restockItem).image : '') + ')' }"></span></span>
+                <span v-show="!uiState.restockUpgrades" class="change-value plus backgrounded clickable" v-on:click="uiState.restockAmount++"></span>
+            </div>
+            <div v-show="uiState.restockWarehouse" class="restock-expand-item-prices">
+                <div class="restock-expand-item-price backgrounded">
+                    <span>Cost:</span>
+                    <span v-show="!uiState.restockUpgrades" class="day-review-item-right">{{ uiState.restockItem.length > 0 && !uiState.restockUpgrades ? getPurchasePrice(uiState.restockItem) : '' }}<span class="day-review-coin"></span></span>
+                    <span v-show="uiState.restockUpgrades" class="day-review-item-right">{{ uiState.restockItem.length > 0 && uiState.restockUpgrades ? getUpgradePrice(uiState.restockItem) : '' }}<span class="day-review-coin"></span></span>
+                </div>
+                <div v-show="!uiState.restockUpgrades" class="restock-expand-item-price backgrounded">
+                    <span>Sells for:</span>
+                    <span class="day-review-item-right">{{ uiState.restockItem.length > 0 && !uiState.restockUpgrades ? getSalePrice(uiState.restockItem) : '' }}<span class="day-review-coin"></span></span>
+                </div>
+                <div class="restock-upgrade-desc" v-show="uiState.restockUpgrades">{{ uiState.restockItem.length > 0 && uiState.restockUpgrades ? getUpgrade(uiState.restockItem).desc : '' }}</div>
+            </div>
+            <div v-show="!uiState.restockWarehouse" class="restock-expand-item-prices">
+                <div class="restock-expand-item-price backgrounded">
+                    <span>Returns for:</span>
+                    <span class="day-review-item-right">{{ uiState.restockItem.length > 0 && !uiState.restockWarehouse && !uiState.restockUpgrades ? getItem(uiState.restockItem).returns : '' }}</span>
+                </div>
+            </div>
+            <div v-show="!uiState.restockUpgrades"
+                 class="restock-expand-item-purchase clickable backgrounded"
+                 v-on:click="uiState.restockWarehouse ? buyItem(uiState.restockItem, uiState.restockAmount) : sellItem(uiState.restockItem, uiState.restockAmount, getItem(uiState.restockItem).returns)"
+                 v-bind:class="{
+                    buy: uiState.restockWarehouse,
+                    sell: !uiState.restockWarehouse,
+                    greyed: (uiState.restockWarehouse && !uiState.restockUpgrades && !canAfford(getPurchasePrice(uiState.restockItem, uiState.restockAmount))) || (!uiState.restockWarehouse && !checkInventory(uiState.restockItem, uiState.restockAmount)) }"
+                 style="opacity: 1">{{ uiState.restockWarehouse ? 'Buy' : 'Sell' }}</div>
+            <div v-show="uiState.restockUpgrades" class="restock-expand-item-purchase clickable backgrounded buy" v-on:click="addUpgrade(uiState.restockItem); uiState.restockItem = ''" v-bind:class="{ greyed: uiState.restockUpgrades && !canAfford(getUpgradePrice(uiState.restockItem)) }" style="opacity: 1">Buy</div>
+        </div>
+
+        <!--<transition name="inventory-slide">-->
+        <div class="ui restock-yours" v-show="(worldState.endOfDay && uiState.restocking) || (uiState.inventoring && !uiState.choosingPerks)" v-bind:class="{ smaller: uiState.inventoring && !uiState.restocking }" v-on:click="selectRestockItem">
+            <div class="restock-heading">Your Stock</div>
+            <div class="restock-items">
+            <span v-show="!uiState.restockUpgrades" class="restock-item backgrounded clickable bronze" v-for="(amount, name) in player.inventory" v-bind:class="{ selected: uiState.restockItem === name && !uiState.restockWarehouse }" v-bind:data-item="name" v-bind:data-stock="'yours'">
+                <span class="item-icon backgrounded" v-bind:style="{ backgroundImage: 'url(' + getItem(name).image + ')' }"></span>
+                <span class="restock-item-amount">{{ amount }}</span>
+            </span>
+                <span v-show="uiState.restockUpgrades" class="restock-item backgrounded bronze" v-for="name in player.stats.upgrades" >
+                &nbsp;
+                    <span class="item-icon backgrounded" v-bind:style="{ backgroundImage: 'url(' + getUpgrade(name).image + ')' }"></span>
+                </span>
+            </div>
+            <span v-show="!uiState.inventoring" v-on:click="uiState.restocking = false; uiState.restockUpgrades = false" class="ui restock-close clickable"></span>
+        </div>
+        <!--</transition>-->
+
+        <div v-show="uiState.mapping" class="ui map backgrounded" style="background-size: 100% 100%">
+            <div class="map-title title-frame backgrounded">Choose location</div>
+            <!-- TODO - v-for -->
+            <div v-on:click="loadArea('roadside')" v-bind:class="{ greyed: false }" class="map-location roadside backgrounded clickable"></div>
+            <div v-on:click="loadArea('village')" v-bind:class="{ greyed: worldState.day < 6 }" class="map-location village backgrounded clickable"></div>
+            <div v-on:click="loadArea('city walls')" v-bind:class="{ greyed: worldState.day < 7 }" class="map-location city-walls backgrounded clickable"></div>
+        </div>
+
+        <transition name="customer-popup">
+            <div v-if="worldState.customer !== null" v-bind:style="{ background: 'url(' + getDenizen(worldState.customer).image + ') no-repeat center', backgroundSize: 'contain' }" class="customer-pop bouncy"></div>
+        </transition>
+    </div>
+
+</div>
+
+</body>
+</html>

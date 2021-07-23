@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tuck Shop Empire</title>
+
+
+    <script src="/js/utils.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+    <link rel="stylesheet" href="https://www.twinkl.co.uk/css/twinkl-buttons.css">
+    <link rel="stylesheet" href="/css/game-ui.css">
+    <link rel="stylesheet" href="/css/twinkl-fonts.css">
+    <script src="/js/utils.js"></script>
+    <script src="/js/game.js"></script>
+
+    <script src="scripts/tuckshop.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/tuckshop.css">
+
+    <style data-ignore>
+        html, body {
+            overflow: hidden;
+        }
+    </style>
+
+    <script>
+
+        function init() {
+            TwinklGame.setup();
+        }
+
+    </script>
+
+
+</head>
+<body>
+
+    <div id="container" class="interactive-theme-green-strong">
+
+        <div class="tuckshop-end-screen">
+            <div class="tuckshop-pop-back"></div>
+            <span class="tuckshop-pop-title" style="top: 15%;">Time's Up!</span>
+            <span class="tuckshop-end-text"></span>
+            <span class="tuckshop-end-text tuckshop-end-score"></span>
+            <div id="pop-button" class="text-button central visible" onclick="TwinklGame.chooseTime()">Play Again</div>
+            <span class="font-button close help-close" id="close-button" style="z-index:2;position: absolute;left:1%; top: 1%; font-size: 4vw;margin-right: 3%;" onclick="location.reload()"><span class="path1"></span><span class="path2"></span></span>
+
+        </div>
+
+        <div id="titleHolder">
+            <div id='titleScreen'></div>
+            <span class="introText">Tuck Shop Empire</span>
+            <span class="introText introSubtext">Time to tuck in</span>
+            <img src="images/Twinkl-Logo-White.svg" class="title-logo">
+            <div id="lets-go-button" class="text-button central visible" onclick="TwinklGame.showPopup()">Let's Go!</div>
+        </div>
+
+        <div id="tuckshop-gameHolder">
+
+            <div class="tuckshop-score-holder">
+                <div class="tuckshop-score-item tuckshop-happiness">Happiness: 20/100</div>
+                <div class="tuckshop-score-item tuckshop-timer">--.--</div>
+                <div class="tuckshop-score-item tuckshop-money">Money: £0</div>
+            </div>
+
+            <div class="tuckshop-back"></div>
+
+            <div class="tuckshop-counter"></div>
+
+            <div class="tuckshop-answer a-yes text-button central visible" onclick="TwinklGame.answer('yes')">Yeah sure!</div>
+            <div class="tuckshop-answer a-no text-button central visible" onclick="TwinklGame.answer('no')">No way!</div>
+
+            <div class="tuckshop-customer"></div>
+
+            <div class="tuckshop-order">
+                <div class="tuckshop-order-arrow"></div>
+                <span class="tuckshop-order-text">Hello! Would you like to say 'yes' or 'no'?</span><br>
+
+            </div>
+
+            <div class="tuckshop-help">
+                <span class="font-button close help-close" id="close-button" style="z-index:2;position: absolute;left:1%; top: 1%; font-size: 4vw;margin-right: 3%;" onclick="TwinklGame.removeHelp()"><span class="path1"></span><span class="path2"></span></span>
+                <div class="tuckshop-help-back">
+                </div>
+
+                <span class="tuckshop-help-title" style="z-index:1">Mixing colours:</span>
+
+                <span class="tuckshop-help-text"></span>
+            </div>
+
+            <img class="twinkl-logo" src="images/Twinkl-Burn.svg">
+        </div>
+
+        <div class="the-buttons" style="z-index:20">
+            <div class="button-container top-btns" style="left: 1.25%;width: auto;height: 10%;font-size: 4vw;position: absolute;top:1%">
+                <span class="font-button close" id="close-button" style="font-size: 4.5vw;margin-right: 3%;" onclick="location.reload()"><span class="path1"></span><span class="path2"></span></span>
+                <span data-micromodal-trigger="help-modal" class="font-button help" id="help-button" style="font-size: 4.5vw;margin-right: 3%;" onclick="TwinklGame.showHelp()"><span class="path1"></span><span class="path2"></span><span class="path3"></span></span>
+            </div>
+
+            <div class="button-container" style="left: 1.5%; width: 6%; bottom: 1%; position:absolute;">
+                <span class="font-button expand-screen" id="fullscreen-button" style="font-size: 4.5vw;"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span></span>
+                <span class="font-button sound-off" id="mute-button" style="font-size: 4.5vw;" onclick="TwinklGame.stopAllSounds()"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span></span>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
