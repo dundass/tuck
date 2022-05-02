@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<?xml version="1.0" encoding="utf-8"><html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tuck Shop Empire v0.3.0</title>
+    <link rel="stylesheet" href="tuckshop-153-fonts.css">
+    <link rel="stylesheet" href="tuckshop-154-tuck.css">
+<!--    <style data-ignore>-->
+    <style>
+        html, body {
+            overflow: hidden;
+        }
+        #wrapper {
+            position: absolute;
+            width: 1120px;
+            height: 630px;
+            top: 10%;
+            left: 8%;
+        }
+    </style>
+
+    <!--<script src="/js/vendor/vue.min.js"></script>-->
+    <!--<script src="/js/utils.js"></script>-->
+    <!--<script src="/js/vendor/howler.min.js"></script>-->
+    <script src="tuckshop-1-vue.min.js"></script>
+    <script src="tuckshop-2-howler.min.js"></script>
+    <script src="tuckshop-3-utils.js"></script>
+
+    <script data-manifest src="tuckshop-148-manifest-inline-script.js"></script>
+    <script src="tuckshop-149-tuck-data.js"></script>
+    <script src="tuckshop-150-tuck.js"></script>
+    <script src="tuckshop-152-manifest-inline-script.js"></script>
+</head>
+<body onload="init()">
+
+<div class="main preloader backgrounded" :style="{backgroundImage: 'url(' + manifest.preloader.src + ')'}"></div>
+
+<div id="wrapper">
+
+    <!--<span v-for="animation in animationData" :style="{ background: 'url(' + animation.url + ') no-repeat -9999px -9999px', backgroundSize: '100px 100px'  }"></span>-->
+
+    <!-- TITLE SCREEN -->
+
+    <div class="main title" v-show="stage === 'title'" :class="{ 'transitioning': titleTransitioning }">
+        <div class="title-sky locked backgrounded cover" :style="{backgroundImage: 'url(' + manifest.titleSky.src + ')'}"></div>
+        <div class="title-bg locked backgrounded cover" :style="{backgroundImage: 'url(' + manifest.titleBG.src + ')'}"></div>
+        <div class="title-mountains locked backgrounded cover" :style="{backgroundImage: 'url(' + manifest.titleMountains.src + ')'}"></div>
+        <div class="title-small-hill locked backgrounded cover" :style="{backgroundImage: 'url(' + manifest.titleSmallHill.src + ')'}"></div>
+        <div class="title-grassplain locked backgrounded cover" :style="{backgroundImage: 'url(' + manifest.titleGrassPlain.src + ')'}"></div>
+        <div class="title-middleground locked backgrounded cover" :style="{backgroundImage: 'url(' + manifest.titleMiddleground.src + ')'}"></div>
+        <div class="title-foreground locked backgrounded cover" :style="{backgroundImage: 'url(' + manifest.titleForeground.src + ')'}"></div>
+        <div class="title-logo backgrounded" :style="{backgroundImage: 'url(' + manifest.titleLogo.src + ')'}"></div>
+        <div class="title-button-container">
+            <div class="title-button new-game backgrounded clickable bouncy" v-on:click="newGame" :style="{backgroundImage: 'url(' + manifest.newGameButton.src + ')'}"></div>
+            <div class="title-button continue backgrounded clickable bouncy" v-on:click="loadInitialGame" :style="{backgroundImage: 'url(' + manifest.continueButton.src + ')'}"></div>
+        </div>
+    </div>
+
+    <!-- INTRO SCREEN -->
+
+    <div class="main" v-show="stage === 'intro'">
+        <div class="intro-text">Once upon a time, Tuck</div>
+        <div class="intro-panel backgrounded"></div>
+    </div>
+
+    <!-- GAME SCREEN -->
+
+    <div class="main" v-show="stage === 'main'">
+
+        <!-- WORLD FRAME - backgrounds, characters, props, weather -->
+
+        <div class="main" id="worldFrame">
+            <div class="main" v-show="stage === 'main'" id="backgroundDay" :style="{ backgroundImage: 'url(' + getAreaCached.backgroundImage + ')' }"></div>
+
+            <div class="main" v-show="stage === 'main'" id="backgroundNight" :style="{ backgroundImage: 'url(' + getAreaCached.backgroundImageDark + ')', opacity: worldState.time > 60 ? ((worldState.time - 60) / 60).toFixed(2) : 0 }"></div>
+
+            <div class="main" v-show="stage === 'main'" id="characterFrame">
+                <div class="tucks-shop">
+                    <div class="shop-wardrobe backgrounded" v-show="player.stats.upgrades.includes('Wardrobe')" :style="{backgroundImage: 'url(' + manifest.shopWardrobe.src + ')'}"></div>
+                    <div class="shop-potions backgrounded" v-show="player.stats.upgrades.includes('Potion Rack')" :style="{backgroundImage: 'url(' + manifest.shopPotions.src + ')'}"></div>
+                    <div class="shop-base backgrounded" :style="{backgroundImage: 'url(' + manifest.shopBase.src + ')'}"></div>
+                    <div class="shop-tacklebox backgrounded" v-show="player.stats.upgrades.includes('Tackle Box')" :style="{backgroundImage: 'url(' + manifest.shopTackleBox.src + ')'}"></div>
+                    <div class="shop-stationery backgrounded" v-show="player.stats.upgrades.includes('Stationery Storage')" :style="{backgroundImage: 'url(' + manifest.shopStationery.src + ')'}"></div>
+                </div>
+                <div class="tuck backgrounded" :style="{backgroundImage: 'url(' + manifest.tuck.src + ')'}"></div>
+                <div class="denizen-wrapper" v-for="denizen in worldState.denizensActive" :style="{transform: 'translateX(' + denizen.x + '%)'}" :class="{'customer': denizen.denizenData.name === worldState.customer, 'smooth-movement': denizen.x > 5 && denizen.x < 95}">
+                    <div class="denizen" :class="{'customer': denizen.denizenData.name === worldState.customer}" :style="{backgroundImage: 'url(' + denizen.denizenData.image + ')', transform: 'scaleX(' + (denizen.approachesFrom === 'left' ? -1 : 1) + ')' }"></div>
+                </div>
+            </div>
+
+            <div class="weather" :class="getActiveEventsCached"></div>
+
+            <div class="main" v-show="player.location === 'roadside'">
+                <span v-for="(leaf, idx) in leaves" class="falling-leaf backgrounded" :style="{ backgroundImage: 'url(' + leaf + ')', left: ((idx * idx) % 100) + '%', animationDelay: idx + 's' }"></span>
+            </div>
+
+            <!--<div class="main" v-show="player.location === 'village'">-->
+            <!--<span class="luma" style="top:21%;left:15.5%"></span>-->
+            <!--</div>-->
+        </div>
+
+        <!-- UI - STATS -->
+
+        <div class="ui player-stats">
+            <span class="rep-icon backgrounded" title="Reputation" :style="{ backgroundImage: 'url(' + manifest.repBarBack.src + ')' }">
+                <!--<span class="rep-stars" :style="{ maskPosition: player.stats.reputation[player.location] + '%' }"></span>-->
+                <span class="rep-stars" :style="{ width: player.stats.reputation[player.location] * 0.8 + '%' }"></span>
+                <span class="rep-stars-overlay backgrounded" :style="{ backgroundImage: 'url(' + manifest.repBarFront.src + ')' }"></span>
+            </span>
+            <span class="cash-icon flex-vert-center backgrounded" title="Currency" :style="{ backgroundImage: 'url(' + manifest.currencyBar.src + ')' }">
+                <span class="cash-amount" title="Currency">{{ player.stats.currency }}</span>
+            </span>
+
+            <div class="perks" title="Perks">
+                <div v-for="perk in player.stats.perks" class="perk backgrounded" :style="{ backgroundImage: 'url(' + manifest.iconPerk.src + ')' }">
+                    <div class="perk-icon backgrounded" :style="{ backgroundImage: 'url(' + getPerk(perk).image + ')' }"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- UI - TOP RIGHT - DAYS & BUTTONS -->
+
+        <div class="ui day-count backgrounded" v-show="!uiState.restocking" title="Time" :style="{ backgroundImage: 'url(' + manifest.dayCount.src + ')' }">
+            <span class="day-sundial backgrounded" :style="{ backgroundImage: 'url(' + manifest.daySundial.src + ')', transform: 'rotate(' + (worldState.time < 120 ? (worldState.time * 1.5).toFixed(1) : 180) + 'deg)' }"></span>
+            <div class="day-sundial-front backgrounded" :style="{ backgroundImage: 'url(' + manifest.daySundialFront.src + ')' }">
+                <div class="day-count-nums flex-vert-center">
+                    <span>Day: {{ worldState.day }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div title="Inventory" v-show="!uiState.restocking" v-on:click="uiState.inventoring = !uiState.inventoring" class="inventory-icon clickable backgrounded" :style="{ backgroundImage: 'url(' + manifest.iconInventory.src + ')' }"></div>
+        <div title="Map" v-show="!uiState.restocking" :class="{ greyed: !worldState.endOfDay }" v-on:click="uiState.mapping = !uiState.mapping" class="map-icon clickable backgrounded" :style="{ backgroundImage: 'url(' + manifest.iconMap.src + ')' }"></div>
+        <div title="Close shop" v-show="!uiState.restocking" :class="{ greyed: worldState.endOfDay }" v-on:click="closeShop" class="close-shop-icon clickable backgrounded" :style="{ backgroundImage: 'url(' + manifest.iconCloseShop.src + ')' }"></div>
+        <!--        <div title="Close shop" v-show="!uiState.restocking && worldState.day > 1" :class="{ greyed: worldState.endOfDay }" v-on:click="closeShop" class="close-shop-icon clickable"></div>-->
+
+        <!-- UI - CUSTOMER QUESTION -->
+
+        <transition name="question-popup">
+            <div class="ui question bouncy flex-vert-center backgrounded" v-on:click="answerQuestion" v-show="worldState.customer !== null" :style="{ fontSize: worldState.customerText.length < 84 ? '2.5vmin' : '1.65vmin', backgroundImage: 'url(' + manifest.questionBackground.src + ')' }" :class="{ prompting: worldState.questionAnswered.length > 0 }">
+                <div class="question-title flex-vert-center backgrounded" :style="{backgroundImage: 'url(' + manifest.titleFrame.src + ')'}">{{ worldState.customer }}</div>
+                <div>{{ worldState.customerText }}</div>
+                <div class="ui backgrounded question-item-price flex-vert-center" v-if="worldState.customerQuestionType === 'purchase' && worldState.questionAnswered === ''" :style="{ backgroundImage: 'url(' + manifest.questionBackground.src + ')' }">
+                    <span>{{ getItem(worldState.customerBuys.item).value[player.location].buy ? 'Bought for ' + getItem(worldState.customerBuys.item).value[player.location].buy + ' gold each' : 'Bought from another location' }}</span>
+                </div>
+                <div class="ui answer yes backgrounded clickable" v-show="(worldState.questionAnswered === '' || worldState.questionAnswered === 'yes')" :class="{ answered: worldState.questionAnswered === 'yes', disabled: !yesCheck }" :style="{ backgroundImage: 'url(' + (worldState.questionAnswered === 'yes' ? manifest.yesAnswered.src : manifest.yesIcon.src) + ')' }"></div>
+                <div class="ui answer no backgrounded clickable" v-show="(worldState.questionAnswered === '' || worldState.questionAnswered === 'no')" :class="{ answered: worldState.questionAnswered === 'no' }" :style="{ backgroundImage: 'url(' + (worldState.questionAnswered === 'no' ? manifest.noAnswered.src : manifest.noIcon.src) + ')' }"></div>
+                <div class="ui question-close clickable backgrounded" title="Close" v-on:click="tapToHide" v-if="worldState.questionAnswered.length > 0" :style="{ backgroundImage: 'url(' + manifest.closeButton.src + ')' }"></div>
+            </div>
+        </transition>
+
+        <!-- UI - PERK CHOICE -->
+
+        <div v-show="uiState.choosingPerks && worldState.customer === null" class="ui perk-overlay">
+            <span v-for="perk in getPerksInAreaCached" v-on:click="choosePerk(perk.name)" class="perk-choice backgrounded clickable" :style="{backgroundImage: 'url(' + manifest.perkChoice.src + ')'}">
+                <span class="perk-title flex-vert-center">
+                    <span>{{ perk.name }}</span>
+                </span>
+                <br>
+                <span class="perk-desc">{{ perk.desc }}</span>
+            </span>
+        </div>
+
+        <!-- UI - DAY REVIEW -->
+
+        <div v-show="worldState.endOfDay && !uiState.restocking && !uiState.choosingPerks && !uiState.mapping" class="ui day-review backgrounded" :class="{ 'item-view': uiState.endOfDayCategory.length > 0 }" :style="{backgroundImage: 'url(' + (uiState.endOfDayCategory.length > 0 ? manifest.expandItemBackground.src : manifest.dayEndBackground.src) + ')'}">
+
+            <!-- end of day landing -->
+            <div v-show="uiState.endOfDayCategory.length === 0" class="day-review-inner">
+                <div v-for="(categoryItems, categoryName) in getSoldTodayCategorised" v-on:click="showItemCategory(categoryItems, categoryName)" class="day-review-item-category backgrounded" :style="{backgroundImage: 'url(' + manifest.dayEndBar.src + ')'}">
+                    <span class="day-review-item-category-block">{{capitalise(categoryName)}}</span>
+                    <span class="day-review-item-category-block">
+                        {{categoryItems.reduce(function(acc, item) { return acc + item.value }, 0)}}
+                        <span class="day-review-coin backgrounded" :style="{backgroundImage: 'url(' + manifest.coin.src + ')'}"></span>
+                    </span>
+                    <span class="day-review-plus clickable">+</span>
+                </div>
+                <div class="day-review-item-category backgrounded" :style="{backgroundImage: 'url(' + manifest.dayEndBar.src + ')'}">
+                    <span class="day-review-item-category-block">Outgoings</span>
+                    <span class="day-review-item-category-block">
+                        {{player.stats.today.outgoings}}
+                        <span class="day-review-coin backgrounded" :style="{backgroundImage: 'url(' + manifest.coin.src + ')'}"></span>
+                    </span>
+                </div>
+                <div class="day-review-item-category backgrounded" :style="{backgroundImage: 'url(' + manifest.dayEndBar.src + ')'}">
+                    <span class="day-review-item-category-block">Daily upkeep</span>
+                    <span class="day-review-item-category-block">
+<!--                        {{player.stats.hasPaidDaily ? -worldState.dailyTax : 'Unpaid'}}-->
+                        {{player.stats.hasPaidDaily ? 'Paid' : 'Unpaid'}}
+<!--                        <span class="day-review-coin"></span>-->
+                    </span>
+                </div>
+                <span>Reputation gained: {{ player.stats.today.reputation }}</span>
+                <span v-show="uiState.endOfDayCategory.length === 0" class="day-review-profit">Profit: {{ ((player.stats.today.currency + player.stats.today.outgoings) > 0 ? '+' : '') + (player.stats.today.currency + player.stats.today.outgoings) }}</span>
+<!--                <span v-show="uiState.endOfDayCategory.length === 0" class="day-review-tax">-->
+<!--                    <span class="day-review-tax-title">Daily upkeep: {{ worldState.dailyTax }} gold</span>-->
+<!--                    <span class="day-review-tax-button" v-on:click="payDailyTax" :class="{clickable: !player.stats.hasPaidDaily, disabled: player.stats.hasPaidDaily || !canAfford(worldState.dailyTax)}">{{ player.stats.hasPaidDaily ? 'Paid' : 'Pay' }}</span>-->
+<!--                </span>-->
+                <span v-show="uiState.endOfDayCategory.length === 0" class="day-review-savings">
+                    <span class="day-review-savings-title">Savings: {{ player.stats.savings }}</span>
+                    <span class="day-review-savings-button backgrounded" v-on:click="saveCurrency(10)" :class="{ clickable: canSaveCurrency(10), disabled: !canSaveCurrency(10) }" :style="{backgroundImage: 'url(' + manifest.dayEndBuyButton.src + ')'}">+10</span>
+                    <span class="day-review-savings-button backgrounded" v-on:click="saveCurrency(100)" :class="{ clickable: canSaveCurrency(100), disabled: !canSaveCurrency(100) }" :style="{backgroundImage: 'url(' + manifest.dayEndBuyButton.src + ')'}">+100</span>
+                    <span class="day-review-savings-button backgrounded" v-on:click="withdrawCurrency" :class="{ clickable: player.stats.savings > 0, disabled: player.stats.savings === 0 }" :style="{backgroundImage: 'url(' + manifest.dayEndBuyButton.src + ')'}">Withdraw</span>
+                </span>
+            </div>
+
+            <!-- end of day expanded -->
+            <div v-show="uiState.endOfDayCategory.length > 0" class="day-review-item-category-name">{{ capitalise(uiState.endOfDayCategory) }}</div>
+            <div v-show="uiState.endOfDayCategory.length > 0" class="day-review-inner">
+                <div v-for="item in uiState.endOfDayCategoryItems" class="day-review-item-category expanded backgrounded" :style="{backgroundImage: 'url(' + manifest.itemBar.src + ')'}">
+                    <span class="day-review-item-category-block">{{capitalise(item.name) + ' x' + item.amount}}</span>
+                    <span class="day-review-item-category-block">
+                        {{item.value}}
+                        <span class="day-review-coin backgrounded" :style="{backgroundImage: 'url(' + manifest.coin.src + ')'}"></span>
+                    </span>
+                </div>
+                <span>{{ (player.stats.today.currency > 0 ? '+' : '') + uiState.endOfDayCategoryItems.reduce(function(acc, item) { return acc + item.value }, 0)}}</span>
+            </div>
+            <span v-show="uiState.endOfDayCategory !== ''" v-on:click="uiState.endOfDayCategory = ''" class="day-review-close-category clickable backgrounded" :style="{backgroundImage: 'url(' + manifest.closeButton.src + ')'}"></span>
+
+            <span v-on:click="toRestock" class="restock-button"><b>Restock</b></span>
+            <span v-on:click="newDay" class="next-day"><b>Next day!</b></span>
+        </div>
+
+        <!-- UI - RESTOCKING -->
+
+        <!--<transition name="restock-slide">-->
+        <div v-show="worldState.endOfDay && uiState.restocking" v-on:click="selectRestockItem" class="ui restock-warehouse backgrounded" :style="{backgroundImage: 'url(' + manifest.dayEndWarehouseBackground.src + ')'}">
+            <div class="restock-heading flex-vert-center backgrounded" :style="{backgroundImage: 'url(' + manifest.titleFrame.src + ')'}">
+                <span>Warehouse</span>
+            </div>
+            <div class="restock-switcher">
+                <span :class="{ selected: !uiState.restockUpgrades }" v-on:click="uiState.restockUpgrades = false; uiState.restockItem = ''" class="restock-switch items flex-vert-center">
+                    <span>Items</span>
+                </span>
+                <span :class="{ selected: uiState.restockUpgrades }" v-on:click="uiState.restockUpgrades = true; uiState.restockItem = ''" class="restock-switch upgrades flex-vert-center">
+                    <span>Upgrades</span>
+                </span>
+            </div>
+            <div class="restock-items warehouse">
+                <span v-show="!uiState.restockUpgrades" class="restock-item backgrounded clickable bronze" v-for="item in getItemsInAreaCached" :class="{ selected: uiState.restockItem === item.name && uiState.restockWarehouse, greyed: !itemIsUnlocked(item.name) }" :title="item.name" :data-item="item.name" :data-stock="'warehouse'" :style="{backgroundImage: 'url(' + manifest.bronze.src + ')'}">
+                    <span class="item-icon backgrounded" :style="{ backgroundImage: 'url(' + item.image + ')' }"></span> 
+                </span>
+                <span v-show="uiState.restockUpgrades" class="restock-item backgrounded clickable bronze" v-for="item in getUpgradesCached" :class="{ selected: uiState.restockItem === item.name && uiState.restockWarehouse }" :title="item.name" :data-item="item.name" :data-stock="'warehouse'" :style="{backgroundImage: 'url(' + manifest.bronze.src + ')'}">
+                    <span class="item-icon backgrounded" :style="{ backgroundImage: 'url(' + item.image + ')' }"></span> 
+                </span>
+            </div>
+        </div>
+        <!--</transition>-->
+
+        <!-- UI - RESTOCKING EXPAND ITEM -->
+
+        <div v-if="worldState.endOfDay && uiState.restocking && uiState.restockItem.length > 0" class="ui restock-expand-item backgrounded" :style="{backgroundImage: 'url(' + manifest.itemViewBackground.src + ')'}">
+            <div class="restock-expand-item-heading">
+                <p>{{uiState.restockItem}}</p>
+                <div>{{uiState.restockItem.length > 0 && !uiState.restockUpgrades ? capitalise(getItem(uiState.restockItem).type) + ' item' : 'Shop upgrade'}}</div>
+            </div>
+            <div class="restock-change-amount backgrounded">
+                <span v-show="!uiState.restockUpgrades && uiState.restockAmount > 1" class="change-value minus backgrounded clickable" v-on:click="uiState.restockAmount > 0 ? uiState.restockAmount-- : ''" :style="{backgroundImage: 'url(' + manifest.itemViewMinus.src + ')'}"></span>
+                <span v-show="!uiState.restockUpgrades" class="restock-item-view backgrounded bronze" :style="{backgroundImage: 'url(' + manifest.bronze.src + ')'}">
+                    <span class="item-icon backgrounded" :style="{ backgroundImage: 'url(' + (uiState.restockItem.length > 0 && !uiState.restockUpgrades ? getItem(uiState.restockItem).image : '') + ')' }"></span>
+                    <span class="restock-item-amount main backgrounded" :style="{backgroundImage: 'url(' + manifest.iconPerk.src + ')'}">{{ uiState.restockAmount }}</span>
+                </span>
+                <span v-show="uiState.restockUpgrades" class="restock-item-view backgrounded bronze" :style="{backgroundImage: 'url(' + manifest.bronze.src + ')'}">
+                    <span class="item-icon backgrounded" :style="{ backgroundImage: 'url(' + (uiState.restockItem.length > 0 && uiState.restockUpgrades ? getUpgrade(uiState.restockItem).image : '') + ')' }"></span>
+                </span>
+                <span v-show="!uiState.restockUpgrades" class="change-value plus backgrounded clickable" v-on:click="uiState.restockAmount++" :style="{backgroundImage: 'url(' + manifest.itemViewPlus.src + ')'}"></span>
+            </div>
+            <div v-show="uiState.restockWarehouse" class="restock-expand-item-prices">
+                <div class="restock-expand-item-price backgrounded" :style="{backgroundImage: 'url(' + manifest.dayEndBar.src + ')'}">
+                    <span>Cost:</span>
+                    <span v-show="!uiState.restockUpgrades" class="day-review-item-right">{{ uiState.restockItem.length > 0 && !uiState.restockUpgrades ? getPurchasePrice(uiState.restockItem) : '' }}<span class="day-review-coin"></span></span>
+                    <span v-show="uiState.restockUpgrades" class="day-review-item-right">{{ uiState.restockItem.length > 0 && uiState.restockUpgrades ? getUpgradePrice(uiState.restockItem) : '' }}<span class="day-review-coin"></span></span>
+                </div>
+                <div v-show="!uiState.restockUpgrades" class="restock-expand-item-price backgrounded" :style="{backgroundImage: 'url(' + manifest.dayEndBar.src + ')'}">
+                    <span>Sells for:</span>
+                    <span class="day-review-item-right">{{ uiState.restockItem.length > 0 && !uiState.restockUpgrades ? getSalePrice(uiState.restockItem) : '' }}<span class="day-review-coin"></span></span>
+                </div>
+                <div class="restock-upgrade-desc" v-show="uiState.restockUpgrades">{{ uiState.restockItem.length > 0 && uiState.restockUpgrades ? getUpgrade(uiState.restockItem).desc : '' }}</div>
+            </div>
+            <div v-show="!uiState.restockWarehouse" class="restock-expand-item-prices">
+                <div class="restock-expand-item-price backgrounded" :style="{backgroundImage: 'url(' + manifest.dayEndBar.src + ')'}">
+                    <span>Returns for:</span>
+                    <span class="day-review-item-right">{{ uiState.restockItem.length > 0 && !uiState.restockWarehouse && !uiState.restockUpgrades ? getItem(uiState.restockItem).returns : '' }}</span>
+                </div>
+            </div>
+            <div v-show="!uiState.restockUpgrades" class="restock-expand-item-purchase clickable backgrounded flex-vert-center" :style="{ backgroundImage : 'url(' + (uiState.restockWarehouse ? manifest.dayEndBuyButton.src : manifest.dayEndSellButton.src) + ')' }" v-on:click="uiState.restockWarehouse ? buyItem(uiState.restockItem, uiState.restockAmount) : sellItem(uiState.restockItem, uiState.restockAmount, getItem(uiState.restockItem).returns)" :class="{
+                    buy: uiState.restockWarehouse,
+                    sell: !uiState.restockWarehouse,
+                    greyed: (uiState.restockWarehouse && !uiState.restockUpgrades && !canAfford(getPurchasePrice(uiState.restockItem, uiState.restockAmount))) || (!uiState.restockWarehouse && !checkInventory(uiState.restockItem, uiState.restockAmount)) }" style="opacity: 1">
+                <span>{{ uiState.restockWarehouse ? 'Buy' : 'Sell' }}</span>
+            </div>
+            <div v-show="uiState.restockUpgrades" class="restock-expand-item-purchase clickable backgrounded flex-vert-center buy" v-on:click="addUpgrade(uiState.restockItem); uiState.restockItem = ''" :class="{ greyed: uiState.restockUpgrades && !canAfford(getUpgradePrice(uiState.restockItem)) }" :style="{backgroundImage: 'url(' + manifest.dayEndBuyButton.src + ')'}" style="opacity: 1">
+                <span>Buy</span>
+            </div>
+        </div>
+
+        <!-- UI - YOUR INVENTORY - reused for smaller daytime inventory -->
+
+        <!--<transition name="inventory-slide">-->
+        <div class="ui restock-yours backgrounded" v-show="(worldState.endOfDay && uiState.restocking) || (uiState.inventoring && !uiState.choosingPerks)" :class="{ smaller: uiState.inventoring && !uiState.restocking }" v-on:click="selectRestockItem" :style="{backgroundImage: 'url(' + manifest.restockYours.src + ')'}">
+            <div class="restock-heading flex-vert-center backgrounded" :style="{backgroundImage: 'url(' + manifest.titleFrame.src + ')'}">
+                <span>Your Stock</span>
+            </div>
+            <div class="restock-items">
+            <span v-show="!uiState.restockUpgrades" class="restock-item backgrounded clickable bronze" v-for="(amount, name) in player.inventory" :class="{ selected: uiState.restockItem === name && !uiState.restockWarehouse }" :title="name" :data-item="name" :data-stock="'yours'" :style="{backgroundImage: 'url(' + manifest.bronze.src + ')'}">
+                <span class="item-icon backgrounded" :style="{ backgroundImage: 'url(' + getItem(name).image + ')' }"></span>
+                <span class="restock-item-amount backgrounded" :style="{backgroundImage: 'url(' + manifest.iconPerk.src + ')'}">{{ amount }}</span>
+            </span>
+                <span v-show="uiState.restockUpgrades" class="restock-item backgrounded bronze" v-for="name in player.stats.upgrades" :style="{backgroundImage: 'url(' + manifest.bronze.src + ')'}">
+                 
+                    <span class="item-icon backgrounded" :style="{ backgroundImage: 'url(' + getUpgrade(name).image + ')' }"></span>
+                </span>
+            </div>
+            <span v-show="!uiState.inventoring" v-on:click="closeRestockScreen" class="ui restock-close clickable backgrounded" :style="{backgroundImage: 'url(' + manifest.closeButton.src + ')'}"></span>
+        </div>
+        <!--</transition>-->
+
+        <!-- UI - MAP SCREEN -->
+
+        <div v-show="uiState.mapping" class="ui map backgrounded" style="background-size: 100% 100%" :style="{backgroundImage: 'url(' + manifest.itemViewBackground.src + ')'}">
+            <div class="map-title title-frame backgrounded flex-vert-center" :style="{backgroundImage: 'url(' + manifest.titleFrame.src + ')'}">
+                <span>Choose location</span>
+            </div>
+            <!-- TODO - v-for -->
+            <div v-on:click="loadArea('roadside')" :class="{ greyed: false }" class="map-location roadside backgrounded clickable" :style="{backgroundImage: 'url(' + manifest.mapRoadside.src + ')'}"></div>
+<!--            <div v-on:click="loadArea('village')" :class="{ greyed: worldState.day < 6 }" class="map-location village backgrounded clickable"></div>-->
+<!--            <div v-on:click="loadArea('city walls')" :class="{ greyed: worldState.day < 7 }" class="map-location city-walls backgrounded clickable"></div>-->
+            <div v-on:click="loadArea('village')" class="map-location village backgrounded clickable" :style="{backgroundImage: 'url(' + manifest.mapVillage.src + ')'}"></div>
+            <div v-on:click="loadArea('city walls')" class="map-location city-walls backgrounded clickable" :style="{backgroundImage: 'url(' + manifest.mapCityWalls.src + ')'}"></div>
+        </div>
+
+        <!-- CUSTOMER IMAGE POPUP -->
+
+        <transition name="customer-popup">
+            <div v-if="worldState.customer !== null" :style="{ background: 'url(' + getDenizen(worldState.customer).image + ') no-repeat center', backgroundSize: 'contain' }" class="customer-pop bouncy"></div>
+        </transition>
+    </div>
+
+</div>
+
+</body>
+</html>
