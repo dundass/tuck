@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tuck Shop Empire v0.3.0</title>
-    <link rel="stylesheet" href="tuckshop-153-fonts.css">
-    <link rel="stylesheet" href="tuckshop-154-tuck.css">
+    <link rel="stylesheet" href="tuckshop-188-fonts.css">
+    <link rel="stylesheet" href="tuckshop-189-tuck.css">
 <!--    <style data-ignore>-->
     <style>
         html, body {
@@ -27,18 +27,21 @@
     <script src="tuckshop-2-howler.min.js"></script>
     <script src="tuckshop-3-utils.js"></script>
 
-    <script data-manifest src="tuckshop-148-manifest-inline-script.js"></script>
-    <script src="tuckshop-149-tuck-data.js"></script>
-    <script src="tuckshop-150-tuck.js"></script>
-    <script src="tuckshop-152-manifest-inline-script.js"></script>
+    <script data-manifest src="tuckshop-182-manifest-inline-script.js"></script>
+    <script src="tuckshop-183-tuck-data.js"></script>
+    <script src="tuckshop-184-tuck.js"></script>
+    <script src="tuckshop-186-manifest-inline-script.js"></script>
 </head>
 <body onload="init()">
 
-<div class="main preloader backgrounded" :style="{backgroundImage: 'url(' + manifest.preloader.src + ')'}"></div>
 
 <div id="wrapper">
 
-    <!--<span v-for="animation in animationData" :style="{ background: 'url(' + animation.url + ') no-repeat -9999px -9999px', backgroundSize: '100px 100px'  }"></span>-->
+    <div class="main" v-show="stage === 'title'" style="z-index: -999;">
+        <img v-for="denizen in world.denizens" :src="denizen.anim">
+    </div>
+
+    <div class="main preloader backgrounded" :style="{backgroundImage: 'url(' + manifest.preloader.src + ')'}"></div>
 
     <!-- TITLE SCREEN -->
 
@@ -52,8 +55,8 @@
         <div class="title-foreground locked backgrounded cover" :style="{backgroundImage: 'url(' + manifest.titleForeground.src + ')'}"></div>
         <div class="title-logo backgrounded" :style="{backgroundImage: 'url(' + manifest.titleLogo.src + ')'}"></div>
         <div class="title-button-container">
-            <div class="title-button new-game backgrounded clickable bouncy" v-on:click="newGame" :style="{backgroundImage: 'url(' + manifest.newGameButton.src + ')'}"></div>
-            <div class="title-button continue backgrounded clickable bouncy" v-on:click="loadInitialGame" :style="{backgroundImage: 'url(' + manifest.continueButton.src + ')'}"></div>
+            <div class="title-button new-game backgrounded clickable bouncy" v-on:click="toStage('instructions')" :style="{backgroundImage: 'url(' + manifest.newGameButton.src + ')'}"></div>
+            <div class="title-button continue backgrounded clickable bouncy" v-on:click="toSavegames" :style="{backgroundImage: 'url(' + manifest.continueButton.src + ')'}"></div>
         </div>
     </div>
 
@@ -62,6 +65,32 @@
     <div class="main" v-show="stage === 'intro'">
         <div class="intro-text">Once upon a time, Tuck</div>
         <div class="intro-panel backgrounded"></div>
+    </div>
+
+    <!-- INSTRUCTIONS SCREEN -->
+
+    <div class="main backgrounded cover" v-show="stage === 'instructions'" :style="{backgroundImage: 'url(' + manifest.titleSky.src + ')'}">
+        <div class="instructions-container backgrounded" :style="{backgroundImage: 'url(' + manifest.itemViewBackground.src + ')'}">
+            <div class="instructions-title">Instructions</div>
+            <div class="instructions-text">Help Tuck build a successful business as you grow from almost nothing to an empire of shops across the whole land!</div>
+            <div class="instructions-text">A variety of characters will stop by your shop, looking to buy items, asking for your help, or to provide entertainment! You can answer yes or no to every question or offer: the choice is yours.</div>
+            <div class="instructions-text">You have a 'Business Rating' bar, which will increase if you make a sale, so make sure you're keeping your customers happy as well as making a profit. Some characters will only talk to you if you have a high Business Rating!</div>
+            <div class="instructions-text">At the end of the day, make sure you stock up with items that your customers will want to buy, and make sure you have enough to pay your daily tax.</div>
+            <div class="instructions-text">On the 'end of day' screen, you will also see what types of items you made money from in the day, and it will also give you the opportunity to set some gold aside to save for shop upgrades!</div>
+            <div class="instructions-button backgrounded clickable" v-on:click="newGame" :style="{backgroundImage: 'url(' + manifest.titleFrame.src + ')'}">Play</div>
+        </div>
+    </div>
+
+    <!-- SAVEGAMES SCREEN -->
+
+    <div class="main" v-show="stage === 'savegames'">
+        <div class="savegame-container backgrounded" :style="{backgroundImage: 'url(' + manifest.itemViewBackground.src + ')'}">
+            <div class="savegame-title">Savegames</div>
+            <!-- TODO - sort by save.timestamp -->
+            <div class="savegame-entry clickable" v-for="save in existingSaves" v-on:click="loadGame(save)">
+                {{ save.date }}
+            </div>
+        </div>
     </div>
 
     <!-- GAME SCREEN -->
@@ -85,7 +114,7 @@
                 </div>
                 <div class="tuck backgrounded" :style="{backgroundImage: 'url(' + manifest.tuck.src + ')'}"></div>
                 <div class="denizen-wrapper" v-for="denizen in worldState.denizensActive" :style="{transform: 'translateX(' + denizen.x + '%)'}" :class="{'customer': denizen.denizenData.name === worldState.customer, 'smooth-movement': denizen.x > 5 && denizen.x < 95}">
-                    <div class="denizen" :class="{'customer': denizen.denizenData.name === worldState.customer}" :style="{backgroundImage: 'url(' + denizen.denizenData.image + ')', transform: 'scaleX(' + (denizen.approachesFrom === 'left' ? -1 : 1) + ')' }"></div>
+                    <div class="denizen" :class="{'customer': denizen.denizenData.name === worldState.customer}" :style="{backgroundImage: 'url(' + (denizen.denizenData.name === worldState.customer ? denizen.denizenData.image : denizen.denizenData.anim) + ')', transform: 'scaleX(' + ((denizen.approachesFrom === 'left' ? -1 : 1) * (denizen.denizenData.flipAsset ? -1 : 1)) + ')' }"></div>
                 </div>
             </div>
 
@@ -131,7 +160,7 @@
         </div>
 
         <div title="Inventory" v-show="!uiState.restocking" v-on:click="uiState.inventoring = !uiState.inventoring" class="inventory-icon clickable backgrounded" :style="{ backgroundImage: 'url(' + manifest.iconInventory.src + ')' }"></div>
-        <div title="Map" v-show="!uiState.restocking" :class="{ greyed: !worldState.endOfDay }" v-on:click="uiState.mapping = !uiState.mapping" class="map-icon clickable backgrounded" :style="{ backgroundImage: 'url(' + manifest.iconMap.src + ')' }"></div>
+        <div title="Map" v-show="!uiState.restocking" :class="{ greyed: !worldState.endOfDay && !player.stats.mapUnlocked }" v-on:click="uiState.mapping = !uiState.mapping" class="map-icon clickable backgrounded" :style="{ backgroundImage: 'url(' + manifest.iconMap.src + ')' }"></div>
         <div title="Close shop" v-show="!uiState.restocking" :class="{ greyed: worldState.endOfDay }" v-on:click="closeShop" class="close-shop-icon clickable backgrounded" :style="{ backgroundImage: 'url(' + manifest.iconCloseShop.src + ')' }"></div>
         <!--        <div title="Close shop" v-show="!uiState.restocking && worldState.day > 1" :class="{ greyed: worldState.endOfDay }" v-on:click="closeShop" class="close-shop-icon clickable"></div>-->
 
@@ -334,7 +363,7 @@
         <!-- CUSTOMER IMAGE POPUP -->
 
         <transition name="customer-popup">
-            <div v-if="worldState.customer !== null" :style="{ background: 'url(' + getDenizen(worldState.customer).image + ') no-repeat center', backgroundSize: 'contain' }" class="customer-pop bouncy"></div>
+            <div v-if="worldState.customer !== null" :style="{ background: 'url(' + getDenizen(worldState.customer).image + ') no-repeat center', backgroundSize: 'contain', transform: 'scaleX(' + (getDenizen(worldState.customer).flipAsset ? 1 : -1) + ')' }" class="customer-pop bouncy"></div>
         </transition>
     </div>
 
