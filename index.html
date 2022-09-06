@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tuck Shop Empire v0.3.0</title>
-    <link rel="stylesheet" href="tuckshop-188-fonts.css">
-    <link rel="stylesheet" href="tuckshop-189-tuck.css">
+    <link rel="stylesheet" href="tuckshop-191-fonts.css">
+    <link rel="stylesheet" href="tuckshop-192-tuck.css">
 <!--    <style data-ignore>-->
     <style>
         html, body {
@@ -27,17 +27,16 @@
     <script src="tuckshop-2-howler.min.js"></script>
     <script src="tuckshop-3-utils.js"></script>
 
-    <script data-manifest src="tuckshop-182-manifest-inline-script.js"></script>
-    <script src="tuckshop-183-tuck-data.js"></script>
-    <script src="tuckshop-184-tuck.js"></script>
-    <script src="tuckshop-186-manifest-inline-script.js"></script>
+    <script data-manifest src="tuckshop-186-manifest-inline-script.js"></script>
+    <script src="tuckshop-187-tuck-data.js"></script>
+    <script src="tuckshop-188-tuck.js"></script>
+    <script src="tuckshop-189-manifest-inline-script.js"></script>
 </head>
 <body onload="init()">
 
-
 <div id="wrapper">
 
-    <div class="main" v-show="stage === 'title'" style="z-index: -999;">
+    <div class="main" v-show="stage === 'title'" style="z-index: -999; top: 100%;">
         <img v-for="denizen in world.denizens" :src="denizen.anim">
     </div>
 
