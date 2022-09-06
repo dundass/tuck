@@ -1,81 +1,201 @@
-// archive desc: Join Tuck on a journey through a rich, fantasy world filled with a huge cast of diverse and comedic characters. Learn to build a successful business, as you grow from almost nothing, to an empire of shops across the whole land! Every choice you make will have repercussions, both small scale and global, and a huge talent-tree of varied perks means no two playthroughs will ever be the same.
-        // archive prev: TitlePreview.png in images folder.
+var lib = {
+            manifest: {
+                preloader: {src: "tuckshop-4-twinkl_preloader.gif"},
+                titleSky: {src: "tuckshop-5-Sky.png"},
+                titleBG: {src: "tuckshop-6-BG.png"},
+                titleMountains: {src: "tuckshop-7-Mountains.png"},
+                titleSmallHill: {src: "tuckshop-8-SmallHill.png"},
+                titleGrassPlain: {src: "tuckshop-9-Grassplain.png"},
+                titleMiddleground: {src: "tuckshop-10-Middleground.png"},
+                titleForeground: {src: "tuckshop-11-Foreground.png"},
+                titleLogo: {src: "tuckshop-12-TuckShopTypography.png"},
+                continueButton: {src: "tuckshop-13-Continue.png"},
+                newGameButton: {src: "tuckshop-14-NewGame.png"},
 
-        // TODO - animated title screen - falling leaves from roadside level but slight diagonal = less sway
-        // assets - U:\#All Age\#Assets For Animation\Tuck Shop Empire\For_Animated_Title\Title_Seperates
+                leafGeneric: {src: "tuckshop-15-leaf-generic.png"},
+                leafOak: {src: "tuckshop-16-leaf-oak.png"},
+                leafSycamore: {src: "tuckshop-17-leaf-sycamore.png"},
+                rain: {src: "tuckshop-18-good-rain.png"},
+                bunting: {src: "tuckshop-19-bunting.png"},
+                tuck: {src: "tuckshop-20-Tuck.png"},
+                shopBase: {src: "tuckshop-21-Shop.png"},
+                shopPotions: {src: "tuckshop-22-PotionRack.png"},
+                shopWardrobe: {src: "tuckshop-23-FullWardrobe.png"},
+                shopTackleBox: {src: "}images/shop/TackleBox.png"},
+                shopStationery: {src: "tuckshop-24-WritingSupplies.png"},
+                titleFrame: {src: "tuckshop-25-TitleFrame.png"},
 
-        function init() {
-            tuck = new Vue({
-                el: '#wrapper',
-                data: Object.assign({}, TwinklGame.tuck.data, {
-                    manifest: lib.manifest,
-                    stage: 'title',
-                    titleTransitioning: false,
-                    leaves: [lib.manifest.leafGeneric.src, lib.manifest.leafOak.src, lib.manifest.leafSycamore.src].reduce(function (a, x, i, arr) { return a.concat(arr.concat(arr)) }, []),
-                    scrollFrame: 0,
-                    loadedAnimations: [],
-                    saveUID: 0,
-                    existingSaves: []
-                }),
-                methods: Object.assign({}, TwinklGame.tuck.methods, {
-                    capitalise: TwinklGame.Utils.capitalise,
-                    // do_a_jquery: function () {
-                    //     // << url validation logic here // diff between live / dev environments >>
-                    //     $.post('https://local.twinkl.it/ajax/resource/track', {
-                    //
-                    //     }, function (data, xhr) {
-                    //         console.log('game saved !')
-                    //         console.log('also theres this bunch of stuff:')
-                    //         console.log(data)
-                    //         console.log(xhr)
-                    //         // will be HTTP code -> more detailed than 'success' -> can handle each status code individually
-                    //
-                    //         // 3 typical form actions -> track (single events), state (overall info object), config (custom settings for resource)
-                    //
-                    //         // utils fn to handle this -> each of the above is an alias to the same function
-                    //
-                    //         // req: resourceId, type of event,
-                    //     }, 'json');
-                    // }
-                }),
-                computed: TwinklGame.tuck.computed,
-                mounted: function () {
+                dayCount: {src: "tuckshop-26-BG_SD.png"},
+                daySundial: {src: "tuckshop-27-Dial.png"},
+                daySundialFront: {src: "tuckshop-28-Top_SD.png"},
+                iconInventory: {src: "tuckshop-29-InventoryButton.png"},
+                iconMap: {src: "tuckshop-30-MapButton.png"},
+                iconCloseShop: {src: "tuckshop-31-CloseShop.png"},
+                repBarBack: {src: "tuckshop-32-Repbarback.png"},
+                repBarFront: {src: "tuckshop-33-Rep_BarFront.png"},
+                currencyBar: {src: "tuckshop-34-Currency.png"},
+                iconPerk: {src: "tuckshop-35-PerkIcon.png"},
+                questionBackground: {src: "tuckshop-36-BG_SI.png"},
+                questionTitle: {src: "tuckshop-25-TitleFrame.png"},   // same as titleFrame
+                yesIcon: {src: "tuckshop-38-GreenIcon.png"},
+                yesAnswered: {src: "tuckshop-39-Yes.png"},
+                noIcon: {src: "tuckshop-40-RedIcon.png"},
+                noAnswered: {src: "tuckshop-41-No.png"},
+                closeButton: {src: "tuckshop-42-Exit_Bu.png"},
+                itemViewBackground: {src: "tuckshop-43-Item_View_BG.png"},
 
-                    var totalAnims = TwinklGame.tuck.data.world.denizens.length,
-                        loadedAnims = 0;
+                mapRoadside: {src: "tuckshop-44-For.png"},
+                mapVillage: {src: "tuckshop-45-Vill.png"},
+                mapCityWalls: {src: "tuckshop-46-CW.png"},
+                locationRoadside: {src: "tuckshop-47-ForestBG.png"},
+                locationRoadsideDark: {src: "tuckshop-48-ForestBGDark.png"},
+                locationVillage: {src: "tuckshop-49-Village.png"},
+                locationVillageDark: {src: "tuckshop-50-VillageDark.png"},
+                locationCityWalls: {src: "tuckshop-51-Citywall.png"},
+                locationCityWallsDark: {src: "tuckshop-52-CitywallNight.png"},
 
-                    TwinklGame.tuck.data.world.denizens.forEach(function (denizen) {
-                        this.loadedAnimations[denizen.name] = new Image();
-                        this.loadedAnimations[denizen.name].onload = function () {
-                            loadedAnims++;
-                            if(loadedAnims === totalAnims) {
-                                document.querySelector('.preloader').classList.add('loaded');
-                                setTimeout(function () {
-                                    this.titleTransitioning = true;
-                                }.bind(this), 5);
-                            }
-                        }.bind(this);
-                        this.loadedAnimations[denizen.name].src = denizen.anim;
-                    }.bind(this));
+                scroll: {src: "tuckshop-53-Scroll.png"},
+                dayEndBackground: {src: "tuckshop-54-BG_EOD.png"},
+                expandItemBackground: {src: "tuckshop-55-ExpandItemBG.png"},
+                dayEndBar: {src: "tuckshop-56-Bar_EOD.png"},
+                itemBar: {src: "tuckshop-57-Item_Bar.png"},
+                coin: {src: "tuckshop-58-Coin.png"},
+                dayEndBuyButton: {src: "tuckshop-59-Buy_Button.png"},
+                dayEndSellButton: {src: "tuckshop-60-Sell_Button.png"},
+                dayEndWarehouseBackground: {src: "tuckshop-61-Warehouse_BG.png"},
+                itemViewMinus: {src: "tuckshop-62-Item_View_Minus.png"},
+                itemViewPlus: {src: "tuckshop-63-Item_View_Plus.png"},
+                restockYours: {src: "tuckshop-64-YourStock_BG.png"},
+                bronze: {src: "tuckshop-65-Bronze.png"},
+                silver: {src: "tuckshop-66-Silver.png"},
+                gold: {src: "tuckshop-67-Gold.png"},
+                unique: {src: "tuckshop-68-Unique.png"},
+                perkChoice: {src: "tuckshop-69-PerksBG.png"},
+                star: {src: "tuckshop-70-Star.png"},
 
-                    var click = new Howl({src: ['tuckshop-185-click.mp3']});
-                    document.querySelectorAll('.clickable').forEach(function (btn) {
-                        btn.addEventListener('click', function() { click.play() });
-                    });
+                itemBasket: {src: 'tuckshop-71-Basket.png'},
+                itemBottles: {src: 'tuckshop-72-Bottlevials.png'},
+                itemDungeoneering: {src: 'tuckshop-73-DungeoneeringKit.png'},
+                itemHerbal: {src: 'tuckshop-74-Herbalpotion.png'},
+                itemCamping: {src: 'tuckshop-75-CampingGear.png'},
+                itemArmour: {src: 'tuckshop-76-Armour.png'},
+                itemWriting: {src: 'tuckshop-77-WritingSupplies.png'},
+                itemPipes: {src: 'tuckshop-78-PanPipes.png'},
+                itemTools: {src: 'tuckshop-79-MetalTools.png'},
+                itemTackle: {src: 'tuckshop-80-FishingTackle.png'},
+                itemLute: {src: 'tuckshop-81-Lute.png'},
+                itemClothing: {src: 'tuckshop-82-FineClothing.png'},
+                itemLocket: {src: 'tuckshop-83-CursedAmulet.png'},
+                itemShield: {src: 'tuckshop-84-DragonScaledShield.png'},
+                itemTea: {src: 'tuckshop-85-LilacTea.png'},
+                itemBook: {src: 'tuckshop-86-HandmadeScrapBook.png'},
 
-                    Vue.nextTick(function () {
+                upgradePotions: {src: "tuckshop-87-PotionRack.png"},
+                upgradeWardrobe: {src: "tuckshop-88-Wardrobe.png"},
+                upgradeTackle: {src: "tuckshop-89-TackleBox.png"},
+                upgradeWriting: {src: "tuckshop-90-WritingStorage.png"},
 
-                        // document.querySelector('.preloader').classList.add('loaded');
-                        // setTimeout(function () {
-                        //     this.titleTransitioning = true;
-                        // }.bind(this), 5);
+                perkAdvertising: {src: 'tuckshop-91-advertising.png'},
+                perkHerbalist: {src: 'tuckshop-92-herbalist.png'},
+                perkBaskets: {src: 'tuckshop-93-Weaver.png'},
+                perkClothing: {src: 'tuckshop-94-outfitter.png'},
+                perkCharismatic: {src: 'tuckshop-95-charismatic.png'},
+                perkMarketing: {src: 'tuckshop-96-Sign.png'},
+                perkSmooth: {src: 'tuckshop-97-smoothtalker.png'},
+                perkHaggler: {src: 'tuckshop-98-haggler.png'},
+                perkScrounger: {src: 'tuckshop-99-scrounger.png'},
+                perkMysterious: {src: 'tuckshop-100-mysteriousbenefactor.png'},
+                perkPhilanthropist: {src: 'tuckshop-101-philanthropy.png'},
+                perkManners: {src: 'tuckshop-102-wellmannered.png'},
 
-                    }.bind(this));
+                // static custs
+                custHorald: {src: "tuckshop-103-horald_0000000032.png"},
+                custFawkes: {src: "tuckshop-104-Fawkes_0000000024.png"},
+                custFaelyn: {src: "tuckshop-105-Faelyn_0000000024.png"},
+                custBaba: {src: "tuckshop-106-babayaga_0000000002.png"},
+                custJack: {src: "tuckshop-107-Jack_Woodcutter_0000000033.png"},
+                custLady: {src: "tuckshop-108-Virbella_0000000024.png"},
+                custGabriel: {src: "tuckshop-109-DragonLord_0000000026.png"},
+                custJohn: {src: "tuckshop-110-Wolfman_0000000040.png"},
+                custJess: {src: "tuckshop-111-Jess_Hogglestonk_Cursed_0000000033.png"},
+                custJessica: {src: "tuckshop-112-Jess_Hogglestonk_Lifted_0000000046.png"},
+                custShai: {src: "tuckshop-113-Shai_0000000024.png"},
+                custMayor: {src: "tuckshop-114-Mayor_0000000024.png"},
+                custLord: {src: "tuckshop-115-baple_0000000024.png"},
+                custSir: {src: "tuckshop-116-knight_0000000032.png"},
+                custUglalk: {src: "tuckshop-117-Uglak_0000000046.png"},
+                custAlmeric: {src: "tuckshop-118-Almeric_0000000024.png"},
+                custHarry: {src: "tuckshop-119-harryoldman_0000000024.png"},
+                custHomenos: {src: "tuckshop-120-proudhoof_0000000037.png"},
+                custVahn: {src: "tuckshop-121-Van_0000000024.png"},
+                custBlue: {src: "tuckshop-122-Bluedemon_0000000024.png"},
+                custRed: {src: "tuckshop-123-reddemon_0000000024.png"},
+                custPink: {src: "tuckshop-124-pinkdemon_0000000024.png"},
+                custWrapped: {src: "tuckshop-125-Wrapped_0000000024.png"},
+                custSign: {src: "tuckshop-126-signdemon_0000000036.png"},
+                custBoss: {src: "tuckshop-127-bossdemon_0000000024.png"},
+                custHugh: {src: "tuckshop-128-hugh_0000000032.png"},
+                custSamuel: {src: "tuckshop-129-samuel_0000000033.png"},
+                custTony: {src: "tuckshop-130-Tony_Cryer_0000000032.png"},
+                custBee: {src: "tuckshop-131-Bee_0000000039.png"},
+                custRuth: {src: "tuckshop-132-ruth_pig_0000000024.png"},
+                custTilly: {src: "tuckshop-133-tillibilly_0000000040.png"},
+                custBrother: {src: "tuckshop-134-Monk_0000000024.png"},
+                custAbigail: {src: "tuckshop-135-Abigail_0000000024.png"},
+                custFool: {src: "tuckshop-136-The_Fool_0000000024.png"},
+                custStranger: {src: "tuckshop-137-stranger_0000000039.png"},
 
-                    // this.loadGame();
-                },
-                updated: function() {
-                    // this.saveGame();
-                }
-            });
+                // animated custs
+                animHorald: {src: "tuckshop-138-horald.gif"},
+                animFawkes: {src: "tuckshop-139-Fawkes.gif"},
+                animFaelyn: {src: "tuckshop-140-Faelyn.gif"},
+                animBaba: {src: "tuckshop-141-babayaga.gif"},
+                animJack: {src: "tuckshop-142-Jack_Woodcutter.gif"},
+                animLady: {src: "tuckshop-143-Virbella.gif"},
+                animGabriel: {src: "tuckshop-144-DragonLord.gif"},
+                animJohn: {src: "tuckshop-145-Wolfman.gif"},
+                animJess: {src: "tuckshop-146-Jess_Hogglestonk_Cursed.gif"},
+                animJessica: {src: "tuckshop-147-Jess_Hogglestonk_Lifted.gif"},
+                animShai: {src: "tuckshop-148-Shai.gif"},
+                animMayor: {src: "tuckshop-149-Mayor.gif"},
+                animLord: {src: "tuckshop-150-baple.gif"},
+                animSir: {src: "tuckshop-151-knight.gif"},
+                animUglalk: {src: "tuckshop-152-Uglak.gif"},
+                animAlmeric: {src: "tuckshop-153-Almeric.gif"},
+                animHarry: {src: "tuckshop-154-harryoldman.gif"},
+                animHomenos: {src: "tuckshop-155-proudhoof.gif"},
+                animVahn: {src: "tuckshop-156-Van.gif"},
+                animBlue: {src: "tuckshop-157-Bluedemon.gif"},
+                animRed: {src: "tuckshop-158-reddemon.gif"},
+                animPink: {src: "tuckshop-159-pinkdemon.gif"},
+                animWrapped: {src: "tuckshop-160-Wrapped.gif"},
+                animSign: {src: "tuckshop-161-signdemon.gif"},
+                animBoss: {src: "tuckshop-162-bossdemon.gif"},
+                animHugh: {src: "tuckshop-163-hugh.gif"},
+                animSamuel: {src: "tuckshop-164-samuel.gif"},
+                animTony: {src: "tuckshop-165-Tony_Cryer.gif"},
+                animBee: {src: "tuckshop-166-Bee.gif"},
+                animRuth: {src: "tuckshop-167-ruth_pig.gif"},
+                animTilly: {src: "tuckshop-168-tillibilly.gif"},
+                animBrother: {src: "tuckshop-169-Monk.gif"},
+                animAbigail: {src: "tuckshop-170-Abigail.gif"},
+                animFool: {src: "tuckshop-171-The_Fool.gif"},
+                animStranger: {src: "tuckshop-172-stranger.gif"},
+
+                soundClick: {src: "tuckshop-173-click.mp3"},
+                soundCoins: {src: "tuckshop-174-coins.mp3"},
+                soundCloseShop: {src: "tuckshop-175-close-shop.mp3"},
+                soundWhoosh: {src: "tuckshop-176-whoosh.mp3"},
+                soundRepUp: {src: "tuckshop-177-rep-ping-good.mp3"},
+                soundRepDown: {src: "tuckshop-178-rep-ping-bad.mp3"},
+                soundForest: {src: "tuckshop-179-forest.mp3"},
+                soundStamp: {src: "tuckshop-180-stamp.mp3"},
+                soundCock: {src: "tuckshop-181-cock.mp3"},
+                soundBell: {src: "tuckshop-182-shop-bell.mp3"},
+                musicMain: {src: "tuckshop-183-main.mp3"},
+                musicRoadside: {src: "tuckshop-184-roadside.mp3"},
+                musicVillage: {src: "audio/village.mp3"},
+                musicCity: {src: "tuckshop-185-city.mp3"},
+
+            }
         }
