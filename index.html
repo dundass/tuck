@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Tuck Shop Empire v0.3.0</title>
-    <link rel="stylesheet" href="tuckshop-191-fonts.css">
-    <link rel="stylesheet" href="tuckshop-192-tuck.css">
+    <link rel="stylesheet" href="tuckshop-192-fonts.css">
+    <link rel="stylesheet" href="tuckshop-193-tuck.css">
 <!--    <style data-ignore>-->
     <style>
         html, body {
@@ -27,10 +27,10 @@
     <script src="tuckshop-2-howler.min.js"></script>
     <script src="tuckshop-3-utils.js"></script>
 
-    <script data-manifest src="tuckshop-186-manifest-inline-script.js"></script>
-    <script src="tuckshop-187-tuck-data.js"></script>
-    <script src="tuckshop-188-tuck.js"></script>
-    <script src="tuckshop-189-manifest-inline-script.js"></script>
+    <script data-manifest src="tuckshop-187-manifest-inline-script.js"></script>
+    <script src="tuckshop-188-tuck-data.js"></script>
+    <script src="tuckshop-189-tuck.js"></script>
+    <script src="tuckshop-190-manifest-inline-script.js"></script>
 </head>
 <body onload="init()">
 
@@ -44,7 +44,7 @@
 
     <!-- TITLE SCREEN -->
 
-    <div class="main title" v-show="stage === 'title'" :class="{ 'transitioning': titleTransitioning }">
+    <div class="main title" v-show="stage === 'title' || stage === 'savegames'" :class="{ 'transitioning': titleTransitioning }">
         <div class="title-sky locked backgrounded cover" :style="{backgroundImage: 'url(' + manifest.titleSky.src + ')'}"></div>
         <div class="title-bg locked backgrounded cover" :style="{backgroundImage: 'url(' + manifest.titleBG.src + ')'}"></div>
         <div class="title-mountains locked backgrounded cover" :style="{backgroundImage: 'url(' + manifest.titleMountains.src + ')'}"></div>
@@ -52,10 +52,19 @@
         <div class="title-grassplain locked backgrounded cover" :style="{backgroundImage: 'url(' + manifest.titleGrassPlain.src + ')'}"></div>
         <div class="title-middleground locked backgrounded cover" :style="{backgroundImage: 'url(' + manifest.titleMiddleground.src + ')'}"></div>
         <div class="title-foreground locked backgrounded cover" :style="{backgroundImage: 'url(' + manifest.titleForeground.src + ')'}"></div>
-        <div class="title-logo backgrounded" :style="{backgroundImage: 'url(' + manifest.titleLogo.src + ')'}"></div>
-        <div class="title-button-container">
+        <div class="title-logo backgrounded" v-show="stage === 'title'" :style="{backgroundImage: 'url(' + manifest.titleLogo.src + ')'}"></div>
+        <div class="title-button-container" v-show="stage === 'title'">
             <div class="title-button new-game backgrounded clickable bouncy" v-on:click="toStage('instructions')" :style="{backgroundImage: 'url(' + manifest.newGameButton.src + ')'}"></div>
             <div class="title-button continue backgrounded clickable bouncy" v-on:click="toSavegames" :style="{backgroundImage: 'url(' + manifest.continueButton.src + ')'}"></div>
+        </div>
+        <!-- SAVEGAMES SCREEN -->
+        <div class="savegame-container backgrounded" v-show="stage === 'savegames'" :style="{backgroundImage: 'url(' + manifest.itemViewBackground.src + ')'}">
+            <div class="savegame-close-button backgrounded clickable" v-on:click="stage = 'title'" :style="{backgroundImage: 'url(' + manifest.closeButton.src + ')'}"></div>
+            <div class="savegame-title">Savegames</div>
+            <!-- TODO - sort by save.timestamp -->
+            <div class="savegame-entry clickable" v-for="save in existingSaves" v-on:click="loadGame(save)">
+                {{ save.date }}
+            </div>
         </div>
     </div>
 
@@ -77,18 +86,6 @@
             <div class="instructions-text">At the end of the day, make sure you stock up with items that your customers will want to buy, and make sure you have enough to pay your daily tax.</div>
             <div class="instructions-text">On the 'end of day' screen, you will also see what types of items you made money from in the day, and it will also give you the opportunity to set some gold aside to save for shop upgrades!</div>
             <div class="instructions-button backgrounded clickable" v-on:click="newGame" :style="{backgroundImage: 'url(' + manifest.titleFrame.src + ')'}">Play</div>
-        </div>
-    </div>
-
-    <!-- SAVEGAMES SCREEN -->
-
-    <div class="main" v-show="stage === 'savegames'">
-        <div class="savegame-container backgrounded" :style="{backgroundImage: 'url(' + manifest.itemViewBackground.src + ')'}">
-            <div class="savegame-title">Savegames</div>
-            <!-- TODO - sort by save.timestamp -->
-            <div class="savegame-entry clickable" v-for="save in existingSaves" v-on:click="loadGame(save)">
-                {{ save.date }}
-            </div>
         </div>
     </div>
 
