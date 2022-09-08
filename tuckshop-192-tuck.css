@@ -405,9 +405,6 @@ template {
           user-select: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
 
-.comic * {
-  font-family: "Comic Sans MS" !important; }
-
 #wrapper, .main, .weather {
   overflow: hidden;
   margin: 0;
@@ -599,6 +596,12 @@ template {
   overflow-x: hidden;
   overflow-y: auto;
   background-size: 100% 100% !important; }
+  .instructions-container .savegame-close-button, .savegame-container .savegame-close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 5%;
+    padding-bottom: 5%; }
   .instructions-container .instructions-title, .instructions-container .savegame-title, .savegame-container .instructions-title, .savegame-container .savegame-title {
     text-align: center;
     font-size: 4vmin; }
